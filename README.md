@@ -31,7 +31,10 @@ Possible combinations of name and #p are:
 + fri26
 + bayg29
 
-\#d can assume values 10, 25, 50, and \#n varies from 1 to 10.
+\#d can assume values 10, 25, 50;
+and \#n varies from 1 to 10.
+
+There are other instances with more than one hundred ports, but they require special treatment to be addressed. So, for now, they won't be addressed in this repository.
 
 ## Implementation
 

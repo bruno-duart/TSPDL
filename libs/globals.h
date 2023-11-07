@@ -1,0 +1,6 @@
+#include "graphs.h"
+
+extern Graph *G;
+extern size_t CONT_GER;
+extern int DIM, PSIZE, MAX_ITER, NUM_TESTES, PERC_MUT, OPT_VAL;
+extern int *DEMAND, *DRAFT;
