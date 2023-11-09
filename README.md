@@ -12,7 +12,7 @@ The objective is to find the shortest tour that satisfies the draft limits for e
 
 ## Instances
 
-All the instances solved by our codes are available on: VERIFICAR O LINK <http://jgr.no/tspdl.>
+All the instances solved by our codes are available on:  <http://jgr.no/tspdl>.
 
 Also, you can use our instances, that are already ready to use with our implementation.
 
