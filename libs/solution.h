@@ -49,15 +49,39 @@ int isIn(int port, int *route);
 /// @return Index of solution, if found. Else, returns -1
 int indexOf(Solution **Arr, int value);
 
-/// @brief 
-/// @return 
-Solution* build_solution();
-Solution* random_swap(Solution* individuo);
-void fixed_swap(Solution* s);
-void Swap_2opt(Solution* s);
+/// @brief Build a new solution to the TSPDL. It uses a greedy_method, afterc choosing the first two ports randomly.
+/// @return A new solution.
+Solution* build_solution_pseudo_greedy();
+
+/// @brief Makes a copy of the route to an existing Solution variable
+/// @param S Target solution
+/// @param ports Route of ports to be copied
+void copiar(Solution *S, int *ports);
+
+/// @brief Performs a Local-Search procedure using a random-swap technique
+/// @param individuo 
+/// @return A new solution
+Solution* random_swap(Solution* s);
+
+/// @brief Performs a Local-Search procedure using a fixed_swap technique
+/// @param s Solution to be refined
+void fixed_swap(Solution* s); // adaptar para retornar uma nova solução 
+
+/// @brief Performs a Local-Search procedure using a 2-Opt technique
+/// @param s Solution to be refined
+void Swap_2opt(Solution* s); // adaptar para retornar uma nova solução 
+
+/// @brief Reverse segments - part of 3-opt local-search
+/// @param s Solution being analised
+/// @param i 
+/// @param j 
+/// @param k 
+/// @return Delta of distance between solutions
 int reverse_segment_if_better(Solution* s, int i, int j, int k);
-void Swap_3opt(Solution* s);
-void local_search_Allpopulation(Solution** S);
+
+/// @brief Performs a Local-Search procedure using a 3-Opt technique
+/// @param s Solution to be refined
+void Swap_3opt(Solution* s);// adaptar para retornar uma nova solução 
 
 /// @brief Shuffle positions of Solutions in Array
 /// @param Arr Array of Solutions to be shuffled

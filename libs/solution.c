@@ -82,7 +82,7 @@ int indexOf(Solution **Arr, int value){
 }
 
 
-Solution* build_solution(){
+Solution* build_solution_pseudo_greedy(){
     /*
     	Constrói uma solução viável para o conjunto de soluções relativo à 
     	população inicial do algoritmo genético. A construção é realizada
@@ -145,18 +145,50 @@ Solution* build_solution(){
 }
 
 
-void copiar(Solution *S, int *solucao){
+void copiar(Solution *S_target, int *ports){
     /*
     	Função utilizada para efetuar a cópia do conteúdo 
     	dos ponteiros de Solution
     */
     for(int i = 0; i < G->V; i++)
-        S->port[i] = solucao[i];
-    S->distance = fitness(solucao);
+        S_target->port[i] = ports[i];
+    S_target->distance = fitness(ports);
 }
 
+Solution* random_swap(Solution* s){
+    int index_1, index_2, aux, distance_i;
+    int *copy = malloc(sizeof(int)*(G->V));
+    Solution *s_new = malloc(sizeof(Solution));
+    s_new->port = malloc(sizeof(int) * (G->V));
+    s_new->distance = s->distance;
+    
+    for(int i=0; i < 100; i++){
+        for(int k=0; k < G->V; k++)
+            copy[k] = s->port[k];
+        do{
+            index_1 = rand() % (G->V-1);
+            do{
+                index_2 = rand() % (G->V-1);
+            }while(index_1 == index_2);
 
+            aux = copy[index_2];
+            copy[index_2] = copy[index_1];
+            copy[index_1] = aux;
+        }while(!is_Solution(copy));
+        
+        distance_i = G->adj[0][copy[0]];
+        for(int j=1; j < G->V; j++)
+            distance_i += G->adj[ copy[j-1] ][ copy[j] ];
 
+        if(distance_i < s_new->distance){
+            s_new->distance = distance_i;
+            for(int k=0; k < G->V; k++)
+                s->port[k] = copy[k];
+        }
+    }
+    free(copy);
+    return s_new;
+}
 
 void fixed_swap(Solution* s){
     /* 
