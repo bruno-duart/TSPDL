@@ -63,13 +63,23 @@ void copiar(Solution *S, int *ports);
 /// @return A new solution
 Solution* random_swap(Solution* s);
 
+// /// @brief Performs a Local-Search procedure using a fixed_swap technique
+// /// @param s Solution to be refined
+// void fixed_swap(Solution* s); // adaptar para retornar uma nova solução 
+
 /// @brief Performs a Local-Search procedure using a fixed_swap technique
 /// @param s Solution to be refined
-void fixed_swap(Solution* s); // adaptar para retornar uma nova solução 
+/// @return A new solution
+Solution *fixed_swap(Solution *s);
+
+// /// @brief Performs a Local-Search procedure using a 2-Opt technique
+// /// @param s Solution to be refined
+// void Swap_2opt(Solution* s); // adaptar para retornar uma nova solução 
 
 /// @brief Performs a Local-Search procedure using a 2-Opt technique
 /// @param s Solution to be refined
-void Swap_2opt(Solution* s); // adaptar para retornar uma nova solução 
+/// @return A new solution
+Solution *swap_2opt(Solution *s);
 
 /// @brief Reverse segments - part of 3-opt local-search
 /// @param s Solution being analised
@@ -82,6 +92,11 @@ int reverse_segment_if_better(Solution* s, int i, int j, int k);
 /// @brief Performs a Local-Search procedure using a 3-Opt technique
 /// @param s Solution to be refined
 void Swap_3opt(Solution* s);// adaptar para retornar uma nova solução 
+
+/// @brief Performs a Local-Search procedure using a 3-Opt technique
+/// @param s Solution to be refined
+/// @return A new solution
+Solution* swap_3opt(Solution* s);
 
 /// @brief Shuffle positions of Solutions in Array
 /// @param Arr Array of Solutions to be shuffled
