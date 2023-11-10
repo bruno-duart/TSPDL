@@ -23,7 +23,7 @@ int main() {
     long int best;
     tempo = clock();
     //metaheuristica
-    tempo = clock() - tempo1;
+    tempo = clock() - tempo;
 
     printf("%d,%f",best, (double)tempo/CLOCKS_PER_SEC);
     free_Graph(G);

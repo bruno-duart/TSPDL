@@ -54,3 +54,6 @@ dkms.conf
 
 # Instances bigger than 100 ports
 *.dat
+
+#.vscode files
+*.json
