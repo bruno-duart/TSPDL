@@ -91,35 +91,35 @@ int indexOf(Solution **Arr, int value)
     return -1;
 }
 
-// Solution* greedy_method()
-// {
-//     Solution *newSolution = new_solution(G->V);
-//     int weight = G->V - 1, smaller, position, k;
-//     int *demand = malloc(sizeof(int) * G->V);
-//     for (int i = 2; i < G->V; i++)
-//     {
-//         smaller = __INT16_MAX__;
-//         for (int j = 0; j < G->V; j++)
-//             if (G->adj[k][j] < smaller && demand[j] == 1 && weight <= DRAFT[j])
-//             {
-//                 position = j;
-//                 smaller = G->adj[k][j];
-//             }
-//         if (smaller != __INT16_MAX__)
-//         {
-//             // printf("K = %d\n", position);
-//             k = position;
-//             newSolution->port[i] = k;
-//             weight--;
-//             newSolution->distance += smaller;
-//             demand[k] = 0;
-//         }
-//     }
-//     newSolution->distance += G->adj[k][0];
+Solution* greedy_method()
+{
+    Solution *newSolution = new_solution();
+    int weight = G->V - 1, smaller, position, k=0;
+    int *demand = malloc(sizeof(int) * G->V);
+    for (int i = 2; i < G->V; i++)
+    {
+        smaller = __INT16_MAX__;
+        for (int j = 0; j < G->V; j++)
+            if (G->adj[k][j] < smaller && demand[j] == 1 && weight <= DRAFT[j])
+            {
+                position = j;
+                smaller = G->adj[k][j];
+            }
+        if (smaller != __INT16_MAX__)
+        {
+            // printf("K = %d\n", position);
+            k = position;
+            newSolution->port[i] = k;
+            weight--;
+            newSolution->distance += smaller;
+            demand[k] = 0;
+        }
+    }
+    newSolution->distance += G->adj[k][0];
 
-//     free(demand);
-//     return newSolution;
-// }
+    free(demand);
+    return newSolution;
+}
 
 Solution *build_solution_pseudo_greedy()
 {
