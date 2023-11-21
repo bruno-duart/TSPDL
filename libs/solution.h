@@ -2,13 +2,17 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "graphs.h"
-#include "globals.h"
 
 /// @brief 
 typedef struct {
     int *port;
     int distance;
 }Solution;
+
+extern Graph *G;
+extern size_t CONT_GER;
+extern int DIM, PSIZE, MAX_ITER, NUM_TESTES, OPT_VAL;
+extern int *DEMAND, *DRAFT;
 
 /// @brief Initializes an array of integers with DIM positions 
 /// @return A reference to an array of integers
@@ -49,6 +53,8 @@ int isIn(int port, int *route);
 /// @return Index of solution, if found. Else, returns -1
 int indexOf(Solution **Arr, int value);
 
+Solution* greedy_method();
+
 /// @brief Build a new solution to the TSPDL. It uses a greedy_method, afterc choosing the first two ports randomly.
 /// @return A new solution.
 Solution* build_solution_pseudo_greedy();
@@ -56,7 +62,7 @@ Solution* build_solution_pseudo_greedy();
 /// @brief Makes a copy of the route to an existing Solution variable
 /// @param S Target solution
 /// @param ports Route of ports to be copied
-void copiar(Solution *S, int *ports);
+void copy_solution(Solution *S, int *ports);
 
 /// @brief Performs a Local-Search procedure using a random-swap technique
 /// @param individuo 
@@ -102,3 +108,7 @@ Solution* swap_3opt(Solution* s);
 /// @param Arr Array of Solutions to be shuffled
 /// @param nChanges Number of changes to be made
 void shuffle(Solution **Arr, int nChanges);
+
+/// @brief Print a Solution s
+/// @param s 
+void print_solution(Solution* s);

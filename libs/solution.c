@@ -91,6 +91,36 @@ int indexOf(Solution **Arr, int value)
     return -1;
 }
 
+// Solution* greedy_method()
+// {
+//     Solution *newSolution = new_solution(G->V);
+//     int weight = G->V - 1, smaller, position, k;
+//     int *demand = malloc(sizeof(int) * G->V);
+//     for (int i = 2; i < G->V; i++)
+//     {
+//         smaller = __INT16_MAX__;
+//         for (int j = 0; j < G->V; j++)
+//             if (G->adj[k][j] < smaller && demand[j] == 1 && weight <= DRAFT[j])
+//             {
+//                 position = j;
+//                 smaller = G->adj[k][j];
+//             }
+//         if (smaller != __INT16_MAX__)
+//         {
+//             // printf("K = %d\n", position);
+//             k = position;
+//             newSolution->port[i] = k;
+//             weight--;
+//             newSolution->distance += smaller;
+//             demand[k] = 0;
+//         }
+//     }
+//     newSolution->distance += G->adj[k][0];
+
+//     free(demand);
+//     return newSolution;
+// }
+
 Solution *build_solution_pseudo_greedy()
 {
     /*
@@ -157,7 +187,7 @@ Solution *build_solution_pseudo_greedy()
     return newSolution;
 }
 
-void copiar(Solution *S_target, int *ports)
+void copy_solution(Solution *S_target, int *ports)
 {
     /*
         Função utilizada para efetuar a cópia do conteúdo
@@ -201,42 +231,11 @@ Solution *random_swap(Solution *s)
         {
             s_new->distance = distance_i;
             for (int k = 0; k < G->V; k++)
-                s->port[k] = copy[k];
+                s_new->port[k] = copy[k];
         }
     }
     free(copy);
     return s_new;
-}
-
-void fixed_swap(Solution *s)
-{
-    /*
-        Realiza a busca local utilizando o critério de troca
-        fixa. Todas as posições são trocadas uma com as outras.
-
-    */
-    int aux, copy[DIM];
-
-    // gera uma cópia da solução de entrada
-    for (int k = 0; k < G->V; k++)
-        copy[k] = s->port[k];
-
-    for (int i = 0; i < DIM - 1; i++)
-        for (int j = i + 1; j < DIM; j++)
-        {
-            // gera uma solução
-            aux = copy[j];
-            copy[j] = copy[i];
-            copy[i] = aux;
-
-            if (is_Solution(copy) && fitness(copy) < s->distance)
-                copiar(s, copy);
-
-            // desfaz o movimento
-            aux = copy[j];
-            copy[j] = copy[i];
-            copy[i] = aux;
-        }
 }
 
 Solution *fixed_swap(Solution *s)
@@ -244,7 +243,7 @@ Solution *fixed_swap(Solution *s)
     Solution *s_new = new_solution();
     int aux, copy[DIM];
 
-    copy(s_new, s->port);
+    copy_solution(s_new, s->port);
     // copies entry solution
     for (int k = 0; k < G->V; k++)
         copy[k] = s->port[k];
@@ -260,7 +259,7 @@ Solution *fixed_swap(Solution *s)
             copy[i] = aux;
 
             if (is_Solution(copy) && fitness(copy) < s_new->distance)
-                copiar(s_new, copy);
+                copy_solution(s_new, copy);
 
             // Undo movement, to allow next iteration
             aux = copy[j];
@@ -279,7 +278,7 @@ void Swap_2opt(Solution *s)
     Solution *best_route = new_solution();
     int route[DIM], route_distance;
 
-    copiar(best_route, s->port);
+    copy_solution(best_route, s->port);
     best_route->distance = fitness(best_route->port);
 
     // number of nodes eligible to be swapped: DIM-1 (penúltimo do array)
@@ -304,7 +303,7 @@ void Swap_2opt(Solution *s)
                 route_distance = fitness(route);
                 if (route_distance < best_route->distance)
                 { // Verifica se a solução é melhor que a corrente
-                    copiar(best_route, route);
+                    copy_solution(best_route, route);
                     best_route->distance = route_distance;
                     // return;
                 }
@@ -313,7 +312,7 @@ void Swap_2opt(Solution *s)
     }
 
     // Atualiza a melhor solução
-    copiar(s, best_route->port);
+    copy_solution(s, best_route->port);
 }
 
 Solution *swap_2opt(Solution *s)
@@ -321,7 +320,7 @@ Solution *swap_2opt(Solution *s)
     Solution *s_new = new_solution();
     int route[DIM], route_distance;
 
-    copiar(s_new, s->port);
+    copy_solution(s_new, s->port);
     s_new->distance = fitness(s_new->port);
 
     // number of nodes eligible to be swapped: DIM-1 (penúltimo do array)
@@ -346,7 +345,7 @@ Solution *swap_2opt(Solution *s)
                 route_distance = fitness(route);
                 if (route_distance < s_new->distance)
                 { // Verifies if solution is better than the current one
-                    copiar(s_new, route);
+                    copy_solution(s_new, route);
                     s_new->distance = route_distance;
                 }
             }
@@ -432,10 +431,11 @@ void Swap_3opt(Solution *s)
     s->distance = fitness(s->port);
 }
 
-Solution* swap_3opt(Solution* s){
+Solution *swap_3opt(Solution *s)
+{
     int delta = 0;
-    Solution* s_new = new_solution();
-    copy(s_new, s->port);
+    Solution *s_new = new_solution();
+    copy_solution(s_new, s->port);
 
     for (int i = 0; i < DIM + 4; i++)
     {
@@ -469,4 +469,10 @@ void shuffle(Solution **Arr, int nChanges)
         Arr[idx1] = Arr[idx2];
         Arr[idx2] = aux;
     }
+}
+
+void print_solution(Solution *s)
+{
+    print_arr(s->port);
+    printf("%d\n", s->distance);
 }
