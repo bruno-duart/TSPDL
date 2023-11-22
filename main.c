@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "libs/solution.h"
+#include "libs/metaheuristics.h"
 
 Graph *G;
 size_t CONT_GER;
@@ -25,22 +25,22 @@ int main()
     MAX_ITER = 100;
 
     int best = 0;
-    tempo = clock();
+    //tempo = clock();
     // metaheuristica
-    Graph_print(G);
+    Graph_print(G);    
     print_arr(DEMAND);
     print_arr(DRAFT);
 
-    Solution* s = build_solution_pseudo_greedy();
+    Solution* s = greedy_method();
 
     print_solution(s);
-    Solution* ns = swap_2opt(s);
+    Solution* ns = tabu_search(s, G, 10, 10, 3);
     printf("new\n");
     print_solution(ns);
 
-    tempo = clock() - tempo;
+    //tempo = clock() - tempo;
 
-    printf("%d,%f", best, (double)tempo / CLOCKS_PER_SEC);
+    //printf("%d,%f", best, (double)tempo / CLOCKS_PER_SEC);
     free_solution(s);
     free_solution(ns);
     free_Graph(G);

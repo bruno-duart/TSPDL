@@ -20,7 +20,7 @@ Solution *new_solution()
 {
     Solution *sol = malloc(sizeof(Solution));
     sol->port = malloc(sizeof(int) * DIM);
-    sol->distance = __INT16_MAX__;
+    sol->distance = 0;
 
     for (int i = 0; i < DIM; i++)
         sol->port[i] = 0;
@@ -91,12 +91,16 @@ int indexOf(Solution **Arr, int value)
     return -1;
 }
 
-Solution* greedy_method()
+Solution *greedy_method()
 {
     Solution *newSolution = new_solution();
-    int weight = G->V - 1, smaller, position, k=0;
+    int weight = G->V - 1, smaller, position, k = 0;
     int *demand = malloc(sizeof(int) * G->V);
-    for (int i = 2; i < G->V; i++)
+    
+
+    for (int i = 0; i < G->V; i++)
+        demand[i] = DEMAND[i];
+    for (int i = 0; i < G->V; i++)
     {
         smaller = __INT16_MAX__;
         for (int j = 0; j < G->V; j++)
@@ -130,7 +134,7 @@ Solution *build_solution_pseudo_greedy()
         dois portos são sorteados aleatoriamente para comporem o início da solução,
         e em seguida, aplica-se o método guloso para obter uma solução viável.
     */
-    Solution *newSolution = new_solution(G->V);
+    Solution *newSolution = new_solution();
     int port1, port2, weight = G->V - 1, smaller, position, k;
     int *demand = malloc(sizeof(int) * G->V);
 
