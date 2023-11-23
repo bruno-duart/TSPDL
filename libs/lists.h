@@ -24,6 +24,6 @@ void list_insert(list_t *l, Solution* s, int T_iter, int position);
 void list_push_front(list_t *l, Solution* s, int T_iter);
 void list_push_back(list_t *l, Solution* s, int T_iter);
 
-int * list_erase(list_t *l, int position);
-int * list_pop_front(list_t *l);
-int * list_pop_back(list_t *l);
+void list_erase(list_t *l, int position);
+void list_pop_front(list_t *l);
+void list_pop_back(list_t *l);

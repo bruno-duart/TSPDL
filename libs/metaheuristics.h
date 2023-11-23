@@ -1,16 +1,15 @@
-#include "solution.h"
+#include "lists.h"
+
+// typedef struct
+// {
+//     int counter;
+//     Solution *s;
+// } TabuMove;
 
 typedef struct
 {
-    int counter;
-    Solution *s;
-} TabuMove;
-
-typedef struct
-{
-    int size_tabu;
     int max_capacity;
-    TabuMove **tabu_moves;
+    list_t* list;
 } TabuList;
 
 /// @brief 
@@ -32,7 +31,7 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
 int is_in_tabu_list(TabuList *tabu_list, Solution *s);
 /// @brief 
 /// @param move 
-void free_tabu_move(TabuMove* move);
+void free_tabu_move(node_t* move);
 /// @brief 
 /// @param tl 
 void free_tabu_list(TabuList* tl);

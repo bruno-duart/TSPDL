@@ -27,16 +27,16 @@ int main()
     int best = 0;
     //tempo = clock();
     // metaheuristica
-    Graph_print(G);    
-    print_arr(DEMAND);
-    print_arr(DRAFT);
+    // Graph_print(G);    
+    // print_arr(DEMAND);
+    // print_arr(DRAFT);
 
     Solution* s = greedy_method();
 
-    print_solution(s);
+    // print_solution(s);
     Solution* ns = tabu_search(s, G, 10, 10, 3);
-    printf("new\n");
-    print_solution(ns);
+    // printf("new\n");
+    // print_solution(ns);
 
     //tempo = clock() - tempo;
 

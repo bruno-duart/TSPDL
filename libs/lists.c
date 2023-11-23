@@ -11,6 +11,7 @@ node_t *new_node(Solution* s, int T_iter){
     node_t *node = malloc(sizeof(node_t));
     
     node->s = new_solution();
+    copy_solution(node->s, s->port);
     node->count_iter = T_iter;
     node->next = NULL;
     
@@ -39,6 +40,7 @@ void free_list(list_t *list){
     while(list->head != NULL){
         node_t *aux;
         aux = list->head;
+        free_solution(aux->s);
         list->head = aux->next;
         free(aux);
     }
@@ -151,7 +153,7 @@ void list_push_back(list_t *l, Solution* s, int T_iter){
     list_insert(l, s, T_iter, l->size_list);
 }
 
-Solution * list_erase(list_t *l, int position){
+void list_erase(list_t *l, int position){
     /**
      * Função para apagar um elemento de uma lista, 
      * em uma determinada posição.
@@ -170,23 +172,23 @@ Solution * list_erase(list_t *l, int position){
         value = ptr->s;
         aux->next = ptr->next;
     }
+    free_solution(value);
     free(ptr);
     l->size_list--;
-    return value;
 }
 
-int * list_pop_front(list_t *l){
+void list_pop_front(list_t *l){
     /**
      * Função para remover o primeiro elemento da lista
      * @param l: lista a ter o primeiro elemento removido
     */
-    return list_erase(l, 0);
+    list_erase(l, 0);
 }
 
-int * list_pop_back(list_t *l){
+void list_pop_back(list_t *l){
     /**
      * Função para remover o último elemento da lista
      * @param l: lista a ter o último elemento removido
     */
-    return list_erase(l, l->size_list-1);
+     list_erase(l, l->size_list-1);
 }
