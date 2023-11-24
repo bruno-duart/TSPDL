@@ -31,12 +31,11 @@ int main()
     // print_arr(DEMAND);
     // print_arr(DRAFT);
 
-    Solution* s = greedy_method();
+    Solution* s = build_solution_pseudo_greedy();
 
     // print_solution(s);
-    Solution* ns = tabu_search(s, G, 10, 10, 3);
-    // printf("new\n");
-    // print_solution(ns);
+    Solution* ns = tabu_search(s, G, 30, 50, 3);
+    print_solution(ns);
 
     //tempo = clock() - tempo;
 

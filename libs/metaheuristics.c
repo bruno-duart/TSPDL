@@ -19,13 +19,12 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
     copy_solution(best_s, s0->port);
     Solution *new_s;
     int index_tabu = -1, iter_no_improv = 0;
-
-    while (iter_no_improv < 1)
+    while (iter_no_improv < 1000)
     {
-        new_s = fixed_swap(curr_s);//recebe resultado da busca local
+        new_s = random_swap(curr_s); // recebe resultado da busca local - definir
         // local_search
         index_tabu = is_in_tabu_list(tabu_list, new_s);
-        if (index_tabu == 0)
+        if (index_tabu == -1)
         {
             // aceita, e insere na lista
             // se precisar, remove o item mais antigo da lista
@@ -46,12 +45,15 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
         {
             copy_solution(best_s, new_s->port);
             iter_no_improv = 0;
-        } 
+        }
+        else
+        {
+            iter_no_improv++;
+        }
 
         free_solution(new_s);
-        iter_no_improv++;
     }
-    //free_solution(new_s);
+    // free_solution(new_s);
     free_solution(curr_s);
     free_tabu_list(tabu_list);
     return best_s;

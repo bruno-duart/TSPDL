@@ -206,9 +206,8 @@ Solution *random_swap(Solution *s)
 {
     int index_1, index_2, aux, distance_i;
     int *copy = malloc(sizeof(int) * (G->V));
-    Solution *s_new = malloc(sizeof(Solution));
-    s_new->port = malloc(sizeof(int) * (G->V));
-    s_new->distance = s->distance;
+    Solution *s_new = new_solution();
+    copy_solution(s_new, s->port);
 
     for (int i = 0; i < 100; i++)
     {
