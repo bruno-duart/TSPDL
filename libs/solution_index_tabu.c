@@ -1,4 +1,4 @@
-#include "solution.h"
+#include "solution_index_tabu.h"
 
 int *ini_array()
 {
@@ -123,7 +123,6 @@ Solution *greedy_method()
             }
         if (smaller != __INT16_MAX__)
         {
-            // printf("K = %d\n", position);
             k = position;
             newSolution->port[i] = k;
             weight--;
@@ -185,19 +184,14 @@ Solution *build_solution_pseudo_greedy()
             }
         if (smaller != __INT16_MAX__)
         {
-            // printf("K = %d\n", position);
             k = position;
             newSolution->port[i] = k;
             weight--;
             newSolution->distance += smaller;
             demand[k] = 0;
         }
-        // print_arr(G->V, newSolution->port);
     }
     newSolution->distance += G->adj[k][0];
-    // print_arr(G->V, newSolution->port);
-    // printf("Weight: %d\n",weight);
-    // exit(1);
 
     free(demand);
     return newSolution;
@@ -214,12 +208,13 @@ void copy_solution(Solution *S_target, int *ports)
     S_target->distance = fitness(ports);
 }
 
-Solution *random_swap(Solution *s)
+ResultLocalSearch* random_swap(Solution *s)
 {
+    ResultLocalSearch* res = new_resultlocalsearch();
     int index_1, index_2, aux, distance_i;
     int *copy = malloc(sizeof(int) * (G->V));
-    Solution *s_new = new_solution();
-    copy_solution(s_new, s->port);
+    //Solution *s_new = new_solution();
+    copy_solution(res->s, s->port);
 
     for (int i = 0; i < 100; i++)
     {
@@ -238,27 +233,27 @@ Solution *random_swap(Solution *s)
             copy[index_1] = aux;
         } while (!is_Solution(copy));
 
-        distance_i = G->adj[0][copy[0]];
-        for (int j = 1; j < G->V; j++)
-            distance_i += G->adj[copy[j - 1]][copy[j]];
+        distance_i = fitness(copy);
 
-        if (distance_i < s_new->distance)
+        if (distance_i < res->s->distance)
         {
-            s_new->distance = distance_i;
-            for (int k = 0; k < G->V; k++)
-                s_new->port[k] = copy[k];
+            copy_solution(res->s, copy);
+            
+            res->index_i = index_1;
+            res->index_j = index_2;
         }
     }
     free(copy);
-    return s_new;
+
+    return res;
 }
 
-Solution *fixed_swap(Solution *s)
+ResultLocalSearch* fixed_swap(Solution *s)
 {
-    Solution *s_new = new_solution();
+    ResultLocalSearch* res = new_resultlocalsearch();
     int aux, copy[DIM];
 
-    copy_solution(s_new, s->port);
+    copy_solution(res->s, s->port);
     // copies entry solution
     for (int k = 0; k < G->V; k++)
         copy[k] = s->port[k];
@@ -273,8 +268,11 @@ Solution *fixed_swap(Solution *s)
             copy[j] = copy[i];
             copy[i] = aux;
 
-            if (is_Solution(copy) && fitness(copy) < s_new->distance)
-                copy_solution(s_new, copy);
+            if (is_Solution(copy) && fitness(copy) < res->s->distance){
+                copy_solution(res->s, copy);
+                res->index_i = i;
+                res->index_j = j;
+            }                
 
             // Undo movement, to allow next iteration
             aux = copy[j];
@@ -283,13 +281,12 @@ Solution *fixed_swap(Solution *s)
         }
     }
 
-    return s_new;
+    return res;
 }
 
 void Swap_2opt(Solution *s)
 {
     /*Realiza a troca de posições seguindo o critério 2-opt.*/
-    // int best_route[DIM], best_distance;
     Solution *best_route = new_solution();
     int route[DIM], route_distance;
 
@@ -330,13 +327,12 @@ void Swap_2opt(Solution *s)
     copy_solution(s, best_route->port);
 }
 
-Solution *swap_2opt(Solution *s)
+ResultLocalSearch* swap_2opt(Solution *s)
 {
-    Solution *s_new = new_solution();
+    ResultLocalSearch* res = new_resultlocalsearch();
     int route[DIM], route_distance;
 
-    copy_solution(s_new, s->port);
-    s_new->distance = fitness(s_new->port);
+    copy_solution(res->s, s->port);
 
     // number of nodes eligible to be swapped: DIM-1 (penúltimo do array)
     for (int i = 0; i < DIM - 3; i++)
@@ -358,16 +354,17 @@ Solution *swap_2opt(Solution *s)
             if (is_Solution(route))
             { // Verifies if generated solution is valid
                 route_distance = fitness(route);
-                if (route_distance < s_new->distance)
+                if (route_distance < res->s->distance)
                 { // Verifies if solution is better than the current one
-                    copy_solution(s_new, route);
-                    s_new->distance = route_distance;
+                    copy_solution(res->s, route);
+                    res->index_i = i;
+                    res->index_j = k;
                 }
             }
         }
     }
 
-    return s_new;
+    return res;
 }
 
 int reverse_segment_if_better(Solution *s, int i, int j, int k)
@@ -490,4 +487,16 @@ void print_solution(Solution *s)
 {
     print_arr(s->port);
     printf("%d\n", s->distance);
+}
+
+ResultLocalSearch* new_resultlocalsearch(){
+    ResultLocalSearch* res = malloc(sizeof(ResultLocalSearch));
+    res->s = new_solution();
+
+    return res;
+}
+
+void free_resultlocalsearch(ResultLocalSearch* res){
+    free_solution(res->s);
+    free(res);
 }

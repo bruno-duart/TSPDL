@@ -9,6 +9,12 @@ typedef struct solution_t {
     int distance;
 }Solution;
 
+typedef struct resultlocalsearch_t {
+    Solution* s;
+    int index_i;
+    int index_j;
+}ResultLocalSearch;
+
 extern Graph *G;
 extern size_t CONT_GER;
 extern int DIM, PSIZE, MAX_ITER, NUM_TESTES, OPT_VAL;
@@ -17,19 +23,15 @@ extern int *DEMAND, *DRAFT;
 /// @brief Initializes an array of integers with DIM positions 
 /// @return A reference to an array of integers
 int* ini_array();
-
 /// @brief Prints an array of integers to the console
 /// @param arr Array to be printed
 void print_arr(int *arr);
-
 /// @brief Initializes a new variable of Solution type
 /// @return A reference to a Solution variable
 Solution* new_solution();
-
 /// @brief Deallocate memory of a Solution type variable
 /// @param S Solution to be deallocated
 void free_solution(Solution *S);
-
 /// @brief Verifies if a port's sequence is a valid solution to the TSPDL
 /// @param port Sequence of ports to be verified
 /// @return True if is valid and False if not
@@ -52,7 +54,6 @@ int fitness(int *port);
 /// @param route Route to be verified
 /// @return 1 if is in route, else 0
 int isIn(int port, int *route);
-
 /// @brief Verifies if the arrays of Solutions has at least one solution with cost = value
 /// @param Arr Array of Solutions to be verified
 /// @param value Cost of solution desired
@@ -65,16 +66,15 @@ Solution* greedy_method();
 /// @brief Build a new solution to the TSPDL. It uses a greedy_method, after choosing the first two ports randomly.
 /// @return A new solution.
 Solution* build_solution_pseudo_greedy();
-
 /// @brief Makes a copy of the route to an existing Solution variable
 /// @param S Target solution
 /// @param ports Route of ports to be copied
 void copy_solution(Solution *S, int *ports);
 
 /// @brief Performs a Local-Search procedure using a random-swap technique
-/// @param s 
-/// @return A new solution
-Solution* random_swap(Solution* s);
+/// @param s Solution to be refined
+/// @return A new solution and the indexes of the interval of changed ports
+ResultLocalSearch* random_swap(Solution* s);
 
 // /// @brief Performs a Local-Search procedure using a fixed_swap technique
 // /// @param s Solution to be refined
@@ -82,8 +82,8 @@ Solution* random_swap(Solution* s);
 
 /// @brief Performs a Local-Search procedure using a fixed_swap technique
 /// @param s Solution to be refined
-/// @return A new solution
-Solution *fixed_swap(Solution *s);
+/// @return A new solution and the indexes of the interval of changed ports
+ResultLocalSearch* fixed_swap(Solution *s);
 
 // /// @brief Performs a Local-Search procedure using a 2-Opt technique
 // /// @param s Solution to be refined
@@ -91,8 +91,8 @@ Solution *fixed_swap(Solution *s);
 
 /// @brief Performs a Local-Search procedure using a 2-Opt technique
 /// @param s Solution to be refined
-/// @return A new solution
-Solution *swap_2opt(Solution *s);
+/// @return A new solution and the indexes of the interval of changed ports
+ResultLocalSearch* swap_2opt(Solution *s);
 
 /// @brief Reverse segments - part of 3-opt local-search
 /// @param s Solution being analised
@@ -119,3 +119,11 @@ void shuffle(Solution **Arr, int nChanges);
 /// @brief Print a Solution s into the terminal
 /// @param s Solution to be printed
 void print_solution(Solution* s);
+
+/// @brief Allocate memory to a new ResulLocalSearch variable
+/// @return A pointer to the ResultLocalSearch variable
+ResultLocalSearch* new_resultlocalsearch();
+
+/// @brief Deallocate memory of a ResultLocalSearch variable
+/// @param res ResultLocalSearch variable to be deallocated
+void free_resultlocalsearch(ResultLocalSearch* res);

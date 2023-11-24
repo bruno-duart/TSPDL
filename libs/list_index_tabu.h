@@ -1,9 +1,9 @@
-#include "solution.h"
+#include "solution_index_tabu.h"
 
 typedef struct _node_t{
     struct _node_t *next;
     int count_iter;
-    Solution* s;
+    int index_i, index_j;
 }node_t;
 
 typedef struct _list_t{
@@ -12,15 +12,14 @@ typedef struct _list_t{
 }list_t;
 
 /// @brief Creates a new (and empty) node. It's specific for Tabu List
-/// @param s A solution
+/// @param index_i Index i of port changed on local search
+/// @param index_j Index j of port changed on local search
 /// @param T_iter Integer representing number of iterations to restrict solution
 /// @return A pointer to node to be inserted into a list
-node_t *new_node(Solution* s, int T_iter);
-
+node_t *new_node(int index_i, int index_j, int T_iter);
 /// @brief Creates a new (and empty) list
 /// @return A pointer to a list
 list_t *new_list();
-
 /// @brief Deallocate memory of a list
 /// @param l List to be deallocated
 void free_list(list_t *l);
@@ -34,8 +33,9 @@ node_t *list_at(list_t *l, int position);
 /// @brief Changes values of a node in a specific position of the list
 /// @param l List to be searched in
 /// @param position Position to be found
-/// @param s Solution to substitute original value
-void list_set(list_t *l, int position, Solution* s);
+/// @param index_i Index i of port changed on local search
+/// @param index_j Index j of port changed on local search
+void list_set(list_t *l, int position, int index_i, int index_j);
 
 /// @brief Returns size of the list
 /// @param l List to be verified
@@ -48,22 +48,25 @@ void print_list(list_t *l);
 
 /// @brief Insert a new node to the list into a desired position
 /// @param l List to have a new node inserted into
-/// @param s Solution to be inserted into the new node
+/// @param index_i Index i of port changed on local search
+/// @param index_j Index j of port changed on local search
 /// @param T_iter Number of iterations to restrict a solution - Tabu Search
 /// @param position Position to insert the new node into
-void list_insert(list_t *l, Solution* s, int T_iter, int position);
+void list_insert(list_t *l, int index_i, int index_j, int T_iter, int position);
 
 /// @brief Insert a new node into the first position of the list
 /// @param l List to have a new node inserted into
-/// @param s Solution to be inserted into the new node
+/// @param index_i Index i of port changed on local search
+/// @param index_j Index j of port changed on local search
 /// @param T_iter Number of iterations to restrict a solution - Tabu Search
-void list_push_front(list_t *l, Solution* s, int T_iter);
+void list_push_front(list_t *l, int index_i, int index_j, int T_iter);
 
 /// @brief Insert a new node into the last position of the list
 /// @param l List to have a new node inserted into
-/// @param s Solution to be inserted into the new node
+/// @param index_i Index i of port changed on local search
+/// @param index_j Index j of port changed on local search
 /// @param T_iter Number of iterations to restrict a solution - Tabu Search
-void list_push_back(list_t *l, Solution* s, int T_iter);
+void list_push_back(list_t *l, int index_i, int index_j, int T_iter);
 
 /// @brief Remove a node from nth position of the list
 /// @param l List to have node removed from
