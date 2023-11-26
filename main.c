@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "libs/metaheuristics.h"
+#include "libs/meta_index_tabu.h"
 
 Graph *G;
 size_t CONT_GER;
@@ -31,10 +31,9 @@ int main()
     // print_arr(DEMAND);
     // print_arr(DRAFT);
 
-    Solution* s = build_solution_pseudo_greedy();
-
-    // print_solution(s);
-    Solution* ns = tabu_search(s, G, 30, 50, 3);
+    Solution* s = random_solution();
+    print_solution(s);
+    Solution* ns = tabu_search(s, G, 10, 50, 3);
     print_solution(ns);
 
     //tempo = clock() - tempo;

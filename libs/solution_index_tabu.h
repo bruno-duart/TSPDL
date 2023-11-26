@@ -60,6 +60,8 @@ int isIn(int port, int *route);
 /// @return Index of solution, if found. Else, returns -1
 int indexOf(Solution **Arr, int value);
 
+Solution* random_solution();
+
 /// @brief Build a new solution to the TSPDL using the greedy method
 /// @return A new solution.
 Solution* greedy_method();
@@ -74,7 +76,8 @@ void copy_solution(Solution *S, int *ports);
 /// @brief Performs a Local-Search procedure using a random-swap technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-ResultLocalSearch* random_swap(Solution* s);
+ResultLocalSearch* random_swap(ResultLocalSearch* s);
+ResultLocalSearch* random_swap_first(Solution *s0);
 
 // /// @brief Performs a Local-Search procedure using a fixed_swap technique
 // /// @param s Solution to be refined
@@ -83,7 +86,7 @@ ResultLocalSearch* random_swap(Solution* s);
 /// @brief Performs a Local-Search procedure using a fixed_swap technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-ResultLocalSearch* fixed_swap(Solution *s);
+ResultLocalSearch* fixed_swap(ResultLocalSearch *s);
 
 // /// @brief Performs a Local-Search procedure using a 2-Opt technique
 // /// @param s Solution to be refined
@@ -92,7 +95,7 @@ ResultLocalSearch* fixed_swap(Solution *s);
 /// @brief Performs a Local-Search procedure using a 2-Opt technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-ResultLocalSearch* swap_2opt(Solution *s);
+ResultLocalSearch* swap_2opt(ResultLocalSearch *s);
 
 /// @brief Reverse segments - part of 3-opt local-search
 /// @param s Solution being analised
@@ -127,3 +130,5 @@ ResultLocalSearch* new_resultlocalsearch();
 /// @brief Deallocate memory of a ResultLocalSearch variable
 /// @param res ResultLocalSearch variable to be deallocated
 void free_resultlocalsearch(ResultLocalSearch* res);
+
+void print_resultlocalsearch(ResultLocalSearch* res);

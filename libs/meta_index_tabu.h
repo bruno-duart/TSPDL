@@ -6,7 +6,7 @@
 //     Solution *s;
 // } TabuMove;
 
-typedef struct
+typedef struct tabulist_t
 {
     int max_capacity;
     list_t* list;
