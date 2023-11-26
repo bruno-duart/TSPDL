@@ -17,25 +17,27 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
     Solution *best_s = new_solution();
     copy_solution(curr_s, s0->port);
     copy_solution(best_s, s0->port);
-    Solution *new_s;
+    Solution *new_s,*new_s2,*new_s3;
     int index_tabu = -1, iter_no_improv = 0;
     while (iter_no_improv < 1000)
     {
-        new_s = random_swap(curr_s); // recebe resultado da busca local - definir
+        
+        //new_s = swap_2opt(curr_s);
+        new_s2 =  fixed_swap(curr_s);// recebe resultado da busca local - definir
         // local_search
-        index_tabu = is_in_tabu_list(tabu_list, new_s);
+        index_tabu = is_in_tabu_list(tabu_list, new_s2);
         if (index_tabu == -1)
         {
             // aceita, e insere na lista
             // se precisar, remove o item mais antigo da lista
-            copy_solution(curr_s, new_s->port);
+            copy_solution(curr_s, new_s2->port);
             insert_tabu_list(tabu_list, curr_s, iter_restricao);
         }
         else if (new_s->distance < (best_s->distance))
         {
             // verifica se é melhor que a melhor encontrada com diferença em x%
             // se sim, aceita a solução
-            copy_solution(curr_s, new_s->port);
+            copy_solution(curr_s, new_s2->port);
             remove_tabu_move(tabu_list, index_tabu);
         }
 
@@ -43,7 +45,7 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
 
         if (curr_s->distance < best_s->distance)
         {
-            copy_solution(best_s, new_s->port);
+            copy_solution(best_s, curr_s->port);
             iter_no_improv = 0;
         }
         else
@@ -51,7 +53,8 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
             iter_no_improv++;
         }
 
-        free_solution(new_s);
+        //free_solution(new_s);
+        free_solution(new_s2);
     }
     // free_solution(new_s);
     free_solution(curr_s);

@@ -103,6 +103,28 @@ int indexOf(Solution **Arr, int value)
     return -1;
 }
 
+Solution* random_solution(){
+    Solution *s = new_solution();
+    s->port[G->V-1] = 0;
+    
+    do{
+        for(int i=0; i<G->V-1; i++)
+        {
+            s->port[i] = rand() % G->V;
+            for(int j=0; j<i; j++)
+                if(s->port[j] == s->port[i])
+                {
+                    i--;
+                    break;
+                }
+        }
+    }while(!is_Solution(s->port));
+
+    s->distance = fitness(s->port);
+    
+    return s;
+}
+
 Solution *greedy_method()
 {
     Solution *newSolution = new_solution();

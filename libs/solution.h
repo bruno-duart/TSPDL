@@ -59,6 +59,8 @@ int isIn(int port, int *route);
 /// @return Index of solution, if found. Else, returns -1
 int indexOf(Solution **Arr, int value);
 
+Solution* random_solution();
+
 /// @brief Build a new solution to the TSPDL using the greedy method
 /// @return A new solution.
 Solution* greedy_method();
