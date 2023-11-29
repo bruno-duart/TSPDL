@@ -23,6 +23,11 @@ Solution *tabu_search(Solution *s0, Graph *G, int iter_restricao, int size_tabu_
     {
         
         //new_s = swap_2opt(curr_s);
+        if (iter_no_improv % 10 == 0){
+            new_s = random_solution();
+            copy_solution(curr_s, new_s->port);
+            free_solution(new_s);
+        }
         new_s2 =  fixed_swap(curr_s);// recebe resultado da busca local - definir
         // local_search
         index_tabu = is_in_tabu_list(tabu_list, new_s2);
