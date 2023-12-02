@@ -26,11 +26,11 @@ Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_
     {
         if (iter_no_improv % 10 == 0) {
             aux = random_solution();
-            copy_solution(curr_s, aux->s);
+            copy_solution(curr_s, aux->port);
             free_solution(aux);
         }
         new_res = random_swap_first(curr_s); // recebe resultado da busca local - definir
-        new_res3 = swap_2opt(new_res);
+        new_res3 = fixed_swap(new_res);
         //new_res3 = swap_2opt(curr_s);
         //print_tabu_list(tabu_list);
         //print_resultlocalsearch(new_res);
@@ -50,7 +50,7 @@ Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_
             copy_solution(curr_s, new_res3->s->port);
             remove_tabu_move(tabu_list, index_tabu);
         }
-
+        //print_tabu_list(tabu_list);
         update_tabu_counter(tabu_list);
 
         if (curr_s->distance < best_s->distance)
@@ -109,7 +109,7 @@ void update_tabu_counter(TabuList* tabu_list)
         ptr = ptr->next;
         if (count == 0)
         {
-            remove_tabu_move(tabu_list, i);
+            remove_tabu_move(tabu_list, i--);
         }
     }
 }

@@ -31,9 +31,9 @@ int main()
     // print_arr(DEMAND);
     // print_arr(DRAFT);
 
-    Solution* s = random_solution();
+    Solution* s = greedy_method();
     print_solution(s);
-    Solution* ns = tabu_search(s, G, 10, 50, 3);
+    Solution* ns = tabu_search(s, G, 30, 10, 3);
     print_solution(ns);
 
     //tempo = clock() - tempo;
