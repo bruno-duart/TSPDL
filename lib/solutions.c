@@ -1,33 +1,5 @@
 #include "solutions.h"
 
-int *array_init()
-{
-    int *arr = malloc(sizeof(int) * DIM);
-    for (int i = 0; i < DIM; i++)
-        scanf("%d", &arr[i]);
-    return arr;
-}
-
-void array_print(int *arr)
-{
-    for (int i = 0; i < DIM; i++)
-        printf(" %d ", arr[i]); // erro com valor não inicializado, por conta do 'i'
-    printf("\n");
-}
-
-int fitness(int *route)
-{
-	int pA, pB = 0, distance = 0;
-
-    for (int i = 0; i < G->V; i++)
-    {
-    	pA = pB;
-    	pB = route[i];
-        distance += G->adj[pA][pB];
-    }
-    return distance;
-}
-
 Solution *new_solution()
 {
     Solution *sol = malloc(sizeof(Solution));
@@ -113,6 +85,23 @@ void solution_copy(Solution *sSource, Solution *sTarget)
 
 void solution_print(Solution *s)
 {
-    array_print(s->route);
+    array_print(s->route, DIM);
     printf("%d\n", s->distance);
+}
+
+SolutionChangeTrack* new_changetrack(Solution *s, int n)
+{
+	SolutionChangeTrack* sct = malloc(sizeof(SolutionChangeTrack));
+	sct->change = malloc(sizeof(int) * n);
+	sct->s = s;
+	sct->n = n;
+	return sct;
+}
+
+void free_changetrack(SolutionChangeTrack *sct, bool keep_solution)
+{
+	if(!keep_solution)
+		free_solution(sct->s);
+	free(sct->change);
+	free(sct);
 }

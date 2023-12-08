@@ -4,6 +4,7 @@
 #include "presets.h"
 #include "graphs.h"
 #include "globals.h"
+#include "arrays.h"
 
 /// @brief 
 typedef struct solution_t {
@@ -11,18 +12,27 @@ typedef struct solution_t {
     int distance;
 } Solution;
 
-/// @brief Initializes an array of integers with DIM positions 
-/// @return A reference to an array of integers
-int* array_init();
-
-/// @brief Prints an array of integers to the console
-/// @param arr Array to be printed
-void array_print(int *arr);
+typedef struct solutionchangetrack_t {
+    Solution *s;
+    int *change;
+    int n;
+} SolutionChangeTrack;
 
 /// @brief Computes the fitnness (cost of route) of a port's sequence
 /// @param port Sequence of ports
 /// @return Cost(Distance) of route - Integer
-int fitness(int *route);
+inline int fitness(int *route)
+{
+	int pA, pB = 0, distance = 0;
+
+    for (int i = 0; i < G->V; i++)
+    {
+    	pA = pB;
+    	pB = route[i];
+        distance += G->adj[pA][pB];
+    }
+    return distance;
+}
 
 /// @brief Initializes a new variable of Solution type
 /// @return A reference to a Solution variable
@@ -63,5 +73,9 @@ void solution_copy(Solution *sSource, Solution *sTarget);
 /// @brief Print a Solution s into the terminal
 /// @param s Solution to be printed
 void solution_print(Solution* s);
+
+
+SolutionChangeTrack* new_changetrack(Solution *s, int n);
+void free_changetrack(SolutionChangeTrack *sct, bool keep_solution);
 
 #endif
