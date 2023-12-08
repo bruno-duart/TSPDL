@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "libs/meta_index_tabu.h"
+#include "lib/meta_index_tabu.h"
 
 Graph *G;
 size_t CONT_GER;

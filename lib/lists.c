@@ -11,7 +11,7 @@ node_t *new_node(Solution* s, int T_iter){
     node_t *node = malloc(sizeof(node_t));
     
     node->s = new_solution();
-    copy_solution(node->s, s->port);
+    solution_copy(node->s, s);
     node->count_iter = T_iter;
     node->next = NULL;
     
@@ -73,7 +73,7 @@ void list_set(list_t *list, int position, Solution* s){
      * @param undo_color: nova cor
     */
     node_t *node = list_at(list, position);
-    copy_solution(node->s, s->port);
+    solution_copy(node->s, s);
 }
 
 int list_size(list_t *list){
@@ -100,7 +100,7 @@ void print_list(list_t *list){
     node_t *aux = list->head;
     while(aux != NULL){
         //printf("(%d,%d)", aux->index_i, aux->undo_color);
-        print_solution(aux->s);
+        solution_print(aux->s);
         if(aux->next != NULL){
             printf("->");
         }
