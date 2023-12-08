@@ -1,13 +1,14 @@
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef HEADER_GRAPHS
+#define HEADER_GRAPHS
 
-#define Type int
+#include "presets.h"
 
 typedef struct {
     int V;
     int A;
     int **adj;
 }Graph;
+
 
 int** new_matrix(int row, int columns);
 
@@ -20,3 +21,5 @@ void graph_insert_arc(Graph *G, Type i, Type j, Type value);
 void graph_remove_arc(Graph *G, Type i, Type j);
 
 void graph_print(Graph *G);
+
+#endif

@@ -1,18 +1,15 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#ifndef HEADER_SOLUTIONS
+#define HEADER_SOLUTIONS
+
+#include "presets.h"
 #include "graphs.h"
+#include "globals.h"
 
 /// @brief 
 typedef struct solution_t {
     int *route;
     int distance;
 } Solution;
-
-extern Graph *G;
-extern size_t CONT_GER;
-extern int DIM, PSIZE, MAX_ITER, NUM_TESTES, OPT_VAL;
-extern int *DEMAND, *DRAFT;
 
 /// @brief Initializes an array of integers with DIM positions 
 /// @return A reference to an array of integers
@@ -66,3 +63,5 @@ void solution_copy(Solution *sSource, Solution *sTarget);
 /// @brief Print a Solution s into the terminal
 /// @param s Solution to be printed
 void solution_print(Solution* s);
+
+#endif

@@ -8,10 +8,10 @@ clean:
 graphs.o: ${SOURCE}/graphs.h ${SOURCE}/graphs.c
 	gcc -o ${TARGET}/graphs.o ${SOURCE}/graphs.c ${CC_FLAGS}
 
-solution.o: ${SOURCE}/solution.h ${SOURCE}/solution.c
-	gcc -o ${TARGET}/solution.o ${SOURCE}/solution.c ${CC_FLAGS}
+solutions.o: ${SOURCE}/solutions.h ${SOURCE}/solutions.c
+	gcc -o ${TARGET}/solutions.o ${SOURCE}/solutions.c ${CC_FLAGS}
 
-lists.o: ${SOURCE}/solution.h ${SOURCE}/lists.h ${SOURCE}/lists.c
+lists.o: ${SOURCE}/solutions.h ${SOURCE}/lists.h ${SOURCE}/lists.c
 	gcc -o ${TARGET}/lists.o ${SOURCE}/lists.c ${CC_FLAGS}
 
 

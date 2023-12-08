@@ -1,4 +1,4 @@
-#include "solution.h"
+#include "solutions.h"
 
 int *array_init()
 {

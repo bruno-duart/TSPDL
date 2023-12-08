@@ -1,4 +1,8 @@
-#include "solution.h"
+#ifndef HEADER_LISTS
+#define HEADER_LISTS
+
+#include "presets.h"
+#include "solutions.h"
 
 typedef struct _node_t{
     struct _node_t *next;
@@ -77,3 +81,5 @@ void list_pop_front(list_t *l);
 /// @brief Remove a node from last position of the list
 /// @param l List to have node removed from
 void list_pop_back(list_t *l);
+
+#endif
