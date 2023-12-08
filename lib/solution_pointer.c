@@ -16,18 +16,20 @@ void print_arr(int *arr)
     printf("\n");
 }
 
-int* new_solution(int n)
+Solution* new_solution(int n)
 {
-    int* new_s = (int*)malloc(sizeof(int) * n);
+    Solution* new_s = (Solution*)malloc(sizeof(Solution));
+    new_s->route = (int*)malloc(sizeof(int)*n);
     return new_s;
 }
 
-void free_solution(int* s)
+void free_solution(Solution* s)
 {
+    free(s->route);
     free(s);
 }
 
-bool is_Solution(int *s)
+bool is_Solution(int* s)
 {
     int weight = G->V - 1;
     int demand[DIM];
@@ -58,11 +60,11 @@ bool is_Solution(int *s)
     return (s[DIM - 1] == 0);
 }
 
-bool is_same_solution(int* sA, int* sB)
+bool is_same_solution(Solution* sA, Solution* sB)
 {
     for (int i = 0; i < G->V; i++)
     {
-        if (sA[i] != sB[i])
+        if (sA->route[i] != sB->route[i])
         {
             return false;
         }
@@ -70,7 +72,7 @@ bool is_same_solution(int* sA, int* sB)
     return true;
 }
 
-int fitness(int *port)
+int fitness(int* port)
 {
     int distance = G->adj[0][port[0]];
     
@@ -81,7 +83,7 @@ int fitness(int *port)
     return distance;
 }
 
-int isIn(int port, int *route)
+int isIn(int port, int* route)
 {
     for (int i = 0; i < G->V; i++)
         if (route[i] == port)
@@ -89,37 +91,39 @@ int isIn(int port, int *route)
     return 0;
 }
 
-int indexOf(int **Arr, int value)
+int indexOf(Solution** Arr, int value)
 {
     for (int i = 0; i < 2 * G->V; i++)
-        if (fitness(Arr[i]) == value)
+        if (fitness(Arr[i]->cost) == value)
             return i;
     return -1;
 }
 
-int* random_solution(int n){
-    int *s = new_solution(n);
-    s[G->V-1] = 0;
+Solution* random_solution(int n){
+    Solution* s = new_solution(n);
+    s->route[n-1] = 0;
     
     do{
-        for(int i=0; i<G->V-1; i++)
+        for(int i=0; i < (n-1); i++)
         {
-            s[i] = rand() % G->V;
+            s->route[i] = rand() % n;
             for(int j=0; j<i; j++)
-                if(s[j] == s[i])
+                if(s->route[j] == s->route[i])
                 {
                     i--;
                     break;
                 }
         }
-    }while(!is_Solution(s));
-    
+    }while(!is_Solution(s->route));
+
+    s->cost = fitness(s->route);
+
     return s;
 }
 
-int* greedy_method(int n)
+Solution* greedy_method(int n)
 {
-    int* new_s = new_solution(n);
+    Solution* new_s = new_solution(n);
     int weight = G->V - 1, smaller, position, k = 0;
     int *demand = (int*) malloc(sizeof(int) * G->V);
     
@@ -138,17 +142,17 @@ int* greedy_method(int n)
         if (smaller != __INT16_MAX__)
         {
             k = position;
-            new_s[i] = k;
+            new_s->route[i] = k;
             weight--;
             demand[k] = 0;
         }
     }
-
+    new_s->cost = fitness(new_s->route);
     free(demand);
     return new_s;
 }
 
-int* build_solution_pseudo_greedy(int n)
+Solution* build_solution_pseudo_greedy(int n)
 {
     /*
         Constrói uma solução viável para o conjunto de soluções relativo à
@@ -157,7 +161,7 @@ int* build_solution_pseudo_greedy(int n)
         dois portos são sorteados aleatoriamente para comporem o início da solução,
         e em seguida, aplica-se o método guloso para obter uma solução viável.
     */
-    int* new_s = new_solution(n);
+    Solution* new_s = new_solution(n);
     int port1, port2, weight = G->V - 1, smaller, position, k;
     int *demand = malloc(sizeof(int) * G->V);
 
@@ -178,8 +182,8 @@ int* build_solution_pseudo_greedy(int n)
     weight--;
 
     // Inicialização da solução, atualização da distância percorrida
-    new_s[0] = port1;
-    new_s[1] = port2;
+    new_s->route[0] = port1;
+    new_s->route[1] = port2;
     demand[port1] = demand[port2] = 0;
     k = port2;
 
@@ -196,31 +200,34 @@ int* build_solution_pseudo_greedy(int n)
         if (smaller != __INT16_MAX__)
         {
             k = position;
-            new_s[i] = k;
+            new_s->route[i] = k;
             weight--;
             demand[k] = 0;
         }
     }
 
+    new_s->cost = fitness(new_s->route);
+
     free(demand);
     return new_s;
 }
 
-void copy_solution(int* S_target, int* ports)
+void copy_solution(Solution* S_target, Solution* S_origin)
 {
     /*
         Função utilizada para efetuar a cópia do conteúdo
         dos ponteiros de Solution
     */
     for (int i = 0; i < G->V; i++)
-        S_target[i] = ports[i];
+        S_target->route[i] = S_origin->route[i];
+    S_target->cost = S_origin->cost;
 }
 
-ResultLocalSearch* random_swap(int* s0, int index_i, int index_j, int n)
+ResultLocalSearch* random_swap(Solution* s0, int index_i, int index_j)
 {
-    ResultLocalSearch* res = new_resultlocalsearch(n);
+    ResultLocalSearch* res = new_resultlocalsearch(G->V);
     int index_1, index_2, aux, distance_i;
-    int *copy = malloc(sizeof(int) * (G->V));
+    int* copy = (int*)malloc(sizeof(int) * (G->V));
     //Solution *s_new = new_solution();
     copy_solution(res->s, s0);
     res->index_i = index_i;
@@ -229,7 +236,7 @@ ResultLocalSearch* random_swap(int* s0, int index_i, int index_j, int n)
     for (int i = 0; i < 100; i++)
     {
         for (int k = 0; k < G->V; k++)
-            copy[k] = s0[k];
+            copy[k] = s0->route[k];
         do
         {
             index_1 = rand() % (G->V - 1);
@@ -260,9 +267,9 @@ ResultLocalSearch* random_swap(int* s0, int index_i, int index_j, int n)
 }
 
 
-ResultLocalSearch* random_swap_first(int* s0, int n)
+ResultLocalSearch* random_swap_first(Solution* s0)
 {
-    ResultLocalSearch* res = new_resultlocalsearch(n);
+    ResultLocalSearch* res = new_resultlocalsearch(G->V);
     int index_1, index_2, aux, distance_i;
     int *copy = malloc(sizeof(int) * (G->V));
     //Solution *s_new = new_solution();
@@ -273,7 +280,7 @@ ResultLocalSearch* random_swap_first(int* s0, int n)
     for (int i = 0; i < 100; i++)
     {
         for (int k = 0; k < G->V; k++)
-            copy[k] = s0[k];
+            copy[k] = s0->route[k];
         do
         {
             index_1 = rand() % (G->V - 1);
@@ -303,9 +310,9 @@ ResultLocalSearch* random_swap_first(int* s0, int n)
     return res;
 }
 
-ResultLocalSearch* fixed_swap(int* s0, int index_i, int index_j, int n)
+ResultLocalSearch* fixed_swap(Solution* s0, int index_i, int index_j)
 {
-    ResultLocalSearch* res = new_resultlocalsearch(n);
+    ResultLocalSearch* res = new_resultlocalsearch(G->V);
     int aux, copy[DIM];
 
     copy_solution(res->s, s0);
@@ -313,7 +320,7 @@ ResultLocalSearch* fixed_swap(int* s0, int index_i, int index_j, int n)
     res->index_j = index_j;
     // copies entry solution
     for (int k = 0; k < G->V; k++)
-        copy[k] = s0[k];
+        copy[k] = s0->route[k];
 
     // Makes swaps between positions of the solution
     for (int i = 0; i < DIM - 1; i++)
@@ -341,10 +348,10 @@ ResultLocalSearch* fixed_swap(int* s0, int index_i, int index_j, int n)
     return res;
 }
 
-void Swap_2opt(int* s, int n)
+void Swap_2opt(Solution* s)
 {
     /*Realiza a troca de posições seguindo o critério 2-opt.*/
-    int* best_route = new_solution(n);
+    Solution* best_route = new_solution(G->V);
     int route[DIM], route_distance;
 
     copy_solution(best_route, s);
@@ -356,15 +363,15 @@ void Swap_2opt(int* s, int n)
         {
             //  1. take s[0] to s[i-1] and add them in order to route
             for (int j = 0; j < i; j++)
-                route[j] = s[j];
+                route[j] = s->route[j];
 
             // 2. take s[i] to s[k] and add them in reverse order to route
             for (int j = 0; j < (k - i); j++)
-                route[i + j] = s[k - j];
+                route[i + j] = s->route[k - j];
 
             // 3. take [k+1] to end and add them in order to route
             for (int j = k; j < DIM - 1; j++)
-                route[j] = s[j];
+                route[j] = s->route[j];
 
             if (is_Solution(route))
             { // Verifica se a solução gerada é viável
@@ -382,9 +389,9 @@ void Swap_2opt(int* s, int n)
     copy_solution(s, best_route);
 }
 
-ResultLocalSearch* swap_2opt(int* s0, int index_i, int index_j, int n)
+ResultLocalSearch* swap_2opt(int* s0, int index_i, int index_j)
 {
-    ResultLocalSearch* res = new_resultlocalsearch(n);
+    ResultLocalSearch* res = new_resultlocalsearch(G->V);
     int route[DIM], route_distance;
 
     copy_solution(res->s, s0);
@@ -398,15 +405,15 @@ ResultLocalSearch* swap_2opt(int* s0, int index_i, int index_j, int n)
         {
             //  1. take s[0] to s[i-1] and add them in order to route
             for (int j = 0; j < i; j++)
-                route[j] =  s0[j];
+                route[j] =  s0->route[j];
 
             // 2. take s[i] to s[k] and add them in reverse order to route
             for (int j = 0; j < (k - i); j++)
-                route[i + j] = s0[k - j];
+                route[i + j] = s0->route[k - j];
 
             // 3. take [k+1] to end and add them in order to route
             for (int j = k; j < DIM - 1; j++)
-                route[j] = s0[j];
+                route[j] = s0->route[j];
 
             if (is_Solution(route))
             { // Verifies if generated solution is valid
@@ -423,7 +430,7 @@ ResultLocalSearch* swap_2opt(int* s0, int index_i, int index_j, int n)
 
     return res;
 }
-
+/*
 int reverse_segment_if_better(int* s, int i, int j, int k)
 {
     int A = s[i - 1], B = s[i], C = s[j - 1];
@@ -494,7 +501,7 @@ void Swap_3opt(int* s)
         }
     }
     /*if(delta >= 0)
-        break;*/
+        break;
     // printf("Entrei\n");
     //}
 }
@@ -517,7 +524,7 @@ int* swap_3opt(int* s, int n)
     }
 
     return s_new;
-}
+}*/
 
 void shuffle(int** Arr, int nChanges)
 {

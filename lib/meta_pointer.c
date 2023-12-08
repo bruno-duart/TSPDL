@@ -9,11 +9,13 @@ TabuList* new_tabu_list(int capacity)
     return tabu_list;
 }
 
-int* tabu_search(int* s0, Graph* G, int iter_restricao, int size_tabu_list)
+Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_list)
 {
     TabuList* tabu_list = new_tabu_list(size_tabu_list);
-    int* curr_s = s0, *aux, *aux1;
-    int* best_s = new_solution();
+    Solution* curr_s = s0;
+    Solution* best_s = new_solution(G->V);
+    Solution* aux; 
+    Solution* aux1;
     copy_solution(best_s, s0);
     ResultLocalSearch *new_res, *new_res3;
 
