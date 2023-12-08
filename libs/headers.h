@@ -10,6 +10,11 @@ typedef struct graph_t{
     int **adj;
 }Graph;
 
+typedef struct solution_t {
+    int* route;
+    int cost;
+} Solution;
+
 typedef struct _node_t{
     struct _node_t *next;
     int count_iter;
@@ -22,7 +27,7 @@ typedef struct _list_t{
 }list_t;
 
 typedef struct resultlocalsearch_t {
-    int* s;
+    Solution* s;
     int index_i;
     int index_j;
 }ResultLocalSearch;
@@ -46,9 +51,6 @@ void Graph_print(Graph *G);
 
 void free_Graph(Graph *G);
 
-
-
-
 extern Graph *G;
 extern size_t CONT_GER;
 extern int DIM, PSIZE, MAX_ITER, NUM_TESTES, OPT_VAL;
@@ -62,10 +64,10 @@ int* ini_array();
 void print_arr(int *arr);
 /// @brief Initializes a new variable of Solution type
 /// @return A reference to a Solution variable
-int* new_solution();
+Solution* new_solution();
 /// @brief Deallocate memory of a Solution type variable
 /// @param S Solution to be deallocated
-void free_solution(int* s);
+void free_solution(Solution* s);
 /// @brief Verifies if a port's sequence is a valid solution to the TSPDL
 /// @param port Sequence of ports to be verified
 /// @return True if is valid and False if not
@@ -75,7 +77,7 @@ bool is_Solution(int *port);
 /// @param sA 
 /// @param sB 
 /// @return True or false
-bool is_same_solution(int* sA, int* sB);
+bool is_same_solution(Solution* sA, Solution* sB);
 
 /// @brief Computes the fitnness (cost of route) of a port's sequence
 /// @param port Sequence of ports
@@ -92,44 +94,36 @@ int isIn(int port, int *route);
 /// @param Arr Array of Solutions to be verified
 /// @param value Cost of solution desired
 /// @return Index of solution, if found. Else, returns -1
-int indexOf(int** Arr, int value);
+int indexOf(Solution** Arr, int value);
 
-int* random_solution();
+Solution* random_solution();
 
 /// @brief Build a new solution to the TSPDL using the greedy method
 /// @return A new solution.
-int* greedy_method();
+Solution* greedy_method();
 /// @brief Build a new solution to the TSPDL. It uses a greedy_method, after choosing the first two ports randomly.
 /// @return A new solution.
-int* build_solution_pseudo_greedy();
+Solution* build_solution_pseudo_greedy();
 /// @brief Makes a copy of the route to an existing Solution variable
 /// @param S Target solution
 /// @param ports Route of ports to be copied
-void copy_solution(int* S_target, int *ports);
+void copy_solution(Solution* S_target, Solution* ports);
 
 /// @brief Performs a Local-Search procedure using a random-swap technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-ResultLocalSearch* random_swap(int* s0, int index_i, int index_j, int n);
-ResultLocalSearch* random_swap_first(int* s0, int n);
-
-// /// @brief Performs a Local-Search procedure using a fixed_swap technique
-// /// @param s Solution to be refined
-// void fixed_swap(int* s); // adaptar para retornar uma nova solução 
+ResultLocalSearch* random_swap(Solution* s0, int index_i, int index_j, int n);
+ResultLocalSearch* random_swap_first(Solution* s0, int n);
 
 /// @brief Performs a Local-Search procedure using a fixed_swap technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-ResultLocalSearch* fixed_swap(int* s0, int index_i, int index_j, int n);
-
-// /// @brief Performs a Local-Search procedure using a 2-Opt technique
-// /// @param s Solution to be refined
-// void Swap_2opt(int* s); // adaptar para retornar uma nova solução 
+ResultLocalSearch* fixed_swap(Solution* s0, int index_i, int index_j, int n);
 
 /// @brief Performs a Local-Search procedure using a 2-Opt technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-ResultLocalSearch* swap_2opt(int* s0, int index_i, int index_j, int n);
+ResultLocalSearch* swap_2opt(Solution* s0, int index_i, int index_j, int n);
 
 /// @brief Reverse segments - part of 3-opt local-search
 /// @param s Solution being analised
@@ -137,25 +131,25 @@ ResultLocalSearch* swap_2opt(int* s0, int index_i, int index_j, int n);
 /// @param j 
 /// @param k 
 /// @return Delta of distance between solutions
-int reverse_segment_if_better(int* s, int i, int j, int k);
+int reverse_segment_if_better(Solution* s, int i, int j, int k);
 
 /// @brief Performs a Local-Search procedure using a 3-Opt technique
 /// @param s Solution to be refined
-void Swap_3opt(int* s);// adaptar para retornar uma nova solução 
+void Swap_3opt(Solution* s);// adaptar para retornar uma nova solução 
 
 /// @brief Performs a Local-Search procedure using a 3-Opt technique
 /// @param s Solution to be refined
 /// @return A new solution
-int* swap_3opt(int* s, int n);
+Solution* swap_3opt(Solution* s, int n);
 
 /// @brief Shuffle positions of Solutions in Array
 /// @param Arr Array of Solutions to be shuffled
 /// @param nChanges Number of changes to be made
-void shuffle(int** Arr, int nChanges);
+void shuffle(Solution** Arr, int nChanges);
 
 /// @brief Print a Solution s into the terminal
 /// @param s Solution to be printed
-void print_solution(int* s);
+void print_solution(Solution* s);
 
 /// @brief Allocate memory to a new ResulLocalSearch variable
 /// @return A pointer to the ResultLocalSearch variable
@@ -253,7 +247,7 @@ TabuList* new_tabu_list(int capacity);
 /// @param size_tabu_list 
 /// @param alpha 
 /// @return 
-int* tabu_search(int* s0, Graph* G, int iter_restricao, int size_tabu_list);
+Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_list);
 
 /// @brief 
 /// @param tabu_list 
