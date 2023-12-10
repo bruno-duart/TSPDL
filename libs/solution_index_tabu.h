@@ -23,6 +23,9 @@ extern int *DEMAND, *DRAFT;
 /// @brief Initializes an array of integers with DIM positions 
 /// @return A reference to an array of integers
 int* ini_array();
+/// @brief Initializes an array of integers with DIM positions 
+/// @return A reference to an array of integers
+int* ini_array_dynamic(int size);
 /// @brief Prints an array of integers to the console
 /// @param arr Array to be printed
 void print_arr(int *arr);

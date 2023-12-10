@@ -9,6 +9,12 @@ int *ini_array()
     return arr;
 }
 
+int *ini_array_dynamic(int size)
+{
+    int *arr = malloc(sizeof(int) * size);
+    return arr;
+}
+
 void print_arr(int *arr)
 {
     for (int i = 0; i < DIM; i++)
