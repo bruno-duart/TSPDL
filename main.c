@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-#include "libs/meta_index_tabu.h"
+#include "lib/meta_pointer.h"
 
 Graph *G;
 size_t CONT_GER;
@@ -25,25 +25,36 @@ int main()
     MAX_ITER = 100;
 
     int best = 0;
-    //tempo = clock();
+    tempo = clock();
     // metaheuristica
     // Graph_print(G);    
     // print_arr(DEMAND);
     // print_arr(DRAFT);
 
     Solution* s = greedy_method();
+    int* index = (int*) malloc(sizeof(int)*2);
+    index[0]=0;
+    index[1]=0;
     print_solution(s);
-    Solution* ns = tabu_search(s, G, 30, 10, 3);
+    Solution* ns = tabu_search(s, G, 10);
     print_solution(ns);
+    // fixed_swap_pointer(s, index);
+    // print_solution(s);
+    // printf("[%d,%d]\n",index[0],index[1]);
 
-    //tempo = clock() - tempo;
+    tempo = clock() - tempo;
 
-    //printf("%d,%f", best, (double)tempo / CLOCKS_PER_SEC);
+    printf("%f\n", (double)tempo / CLOCKS_PER_SEC);
     free_solution(s);
     free_solution(ns);
+    free(index);
     free_Graph(G);
     free(DEMAND);
     free(DRAFT);
 
     return 0;
 }
+
+//gcc main.c lib/graphs.c lib/list_pointer.c lib/solution_pointer.c lib/meta_pointer.c -o main
+//valgrind --leak-check=full --track-origins=yes ./main < instances/burma14_10_1.txt
+//./main < instances/burma14_10_1.txt

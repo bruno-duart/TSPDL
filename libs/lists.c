@@ -18,12 +18,12 @@ node_t *new_node(Solution* s, int T_iter){
     return node;
 }
 
-list_t *new_list(){
+list_solution *new_list(){
     /**
      * Função para criar uma nova lista
      * @return list: retorna a lista que foi criada
     */
-    list_t *list = malloc(sizeof(list_t));
+    list_solution *list = malloc(sizeof(list_solution));
 
     list->head = NULL;
     list->size_list = 0;
@@ -31,7 +31,7 @@ list_t *new_list(){
     return list;
 }
 
-void free_list(list_t *list){
+void free_list(list_solution *list){
     /**
      * Libera a memória alocada para a lista
      * @param list: lista a ter memória liberada
@@ -48,7 +48,7 @@ void free_list(list_t *list){
     free(list);
 }
 
-node_t *list_at(list_t *list, int position){
+node_t *list_at(list_solution *list, int position){
     /**
      * Função que percorre a lista até uma determinada posição
      * e retorna um ponteiro para o nó que a ocupa
@@ -64,7 +64,7 @@ node_t *list_at(list_t *list, int position){
     return aux;
 }
 
-void list_set(list_t *list, int position, Solution* s){
+void list_set(list_solution *list, int position, Solution* s){
     /**
      * Função que altera os valores de um nó na lista.
      * @param list: lista a ter algum valor alterado
@@ -76,7 +76,7 @@ void list_set(list_t *list, int position, Solution* s){
     copy_solution(node->s, s->port);
 }
 
-int list_size(list_t *list){
+int list_size(list_solution *list){
     /**
      * Função que retorna o tamanho da lista
      * @param list: lista a ter o tamanho calculado
@@ -92,7 +92,7 @@ int list_size(list_t *list){
     return (int) i;
 }
 
-void print_list(list_t *list){
+void print_list(list_solution *list){
     /**
      * Função para exibir a lista no console.
      * @param list: lista ser exibida
@@ -109,7 +109,7 @@ void print_list(list_t *list){
     printf("\n");
 }
 
-void list_insert(list_t *l, Solution* s, int T_iter, int position){
+void list_insert(list_solution *l, Solution* s, int T_iter, int position){
     /**
      * Função para inserir um novo nó na lista.
      * @param list: lista a ter um novo nó
@@ -131,7 +131,7 @@ void list_insert(list_t *l, Solution* s, int T_iter, int position){
     l->size_list++;
 }
 
-void list_push_front(list_t *l, Solution* s, int T_iter){
+void list_push_front(list_solution *l, Solution* s, int T_iter){
     /**
      * Função para inserir um vértice no início da lista
      * @param l: lista a ter um novo nó
@@ -142,7 +142,7 @@ void list_push_front(list_t *l, Solution* s, int T_iter){
     list_insert(l, s, T_iter, 0);
 }
 
-void list_push_back(list_t *l, Solution* s, int T_iter){
+void list_push_back(list_solution *l, Solution* s, int T_iter){
     /**
      * Função para inserir um vértice no final da lista
      * @param l: lista a ter um novo nó
@@ -153,7 +153,7 @@ void list_push_back(list_t *l, Solution* s, int T_iter){
     list_insert(l, s, T_iter, l->size_list);
 }
 
-void list_erase(list_t *l, int position){
+void list_erase(list_solution *l, int position){
     /**
      * Função para apagar um elemento de uma lista, 
      * em uma determinada posição.
@@ -177,7 +177,7 @@ void list_erase(list_t *l, int position){
     l->size_list--;
 }
 
-void list_pop_front(list_t *l){
+void list_pop_front(list_solution *l){
     /**
      * Função para remover o primeiro elemento da lista
      * @param l: lista a ter o primeiro elemento removido
@@ -185,7 +185,7 @@ void list_pop_front(list_t *l){
     list_erase(l, 0);
 }
 
-void list_pop_back(list_t *l){
+void list_pop_back(list_solution *l){
     /**
      * Função para remover o último elemento da lista
      * @param l: lista a ter o último elemento removido

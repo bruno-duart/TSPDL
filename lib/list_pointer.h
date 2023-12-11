@@ -1,4 +1,7 @@
-#include "solution_index_tabu.h"
+#ifndef HEADERS_LIST
+#define HEADERS_LIST
+
+#include "presets.h"
 
 typedef struct _node_t{
     struct _node_t *next;
@@ -80,3 +83,5 @@ void list_pop_front(list_tuples *l);
 /// @brief Remove a node from last position of the list
 /// @param l List to have node removed from
 void list_pop_back(list_tuples *l);
+
+#endif

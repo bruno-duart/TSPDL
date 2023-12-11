@@ -1,4 +1,4 @@
-#include "headers.h"
+#include "meta_pointer.h"
 
 TabuList* new_tabu_list(int capacity)
 {
@@ -9,61 +9,44 @@ TabuList* new_tabu_list(int capacity)
     return tabu_list;
 }
 
-Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_list)
+Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao)
 {
-    TabuList* tabu_list = new_tabu_list(size_tabu_list);
-    Solution* curr_s = s0;
-    Solution* best_s = new_solution(G->V);
-    Solution* aux; 
-    Solution* aux1;
+    TabuList* tabu_list = new_tabu_list(iter_restricao);
+    Solution* curr_s = new_solution(), *aux;
+    Solution* stored_s = new_solution();
+    Solution* best_s = new_solution();
+    copy_solution(curr_s, s0);
     copy_solution(best_s, s0);
-    ResultLocalSearch *new_res, *new_res3;
-
+    int* index = (int*) malloc(sizeof(int) * 2);
+    index[0] = 0;
+    index[1] = 0;
+    
     int index_tabu, iter_no_improv = 0;
-    while (iter_no_improv < 100)
+    while (iter_no_improv < 200)
     {
-        if (iter_no_improv % 20 == 0) {
+        if ((iter_no_improv % 50 == 0) && (iter_no_improv > 0)) {
             aux = random_solution();
-            aux1 = curr_s;
-            curr_s = aux;
-            aux = aux1;
+            copy_solution(curr_s, aux);
             free_solution(aux);
         }
-        new_res = random_swap_first(curr_s, G->V);
-        new_res3 = fixed_swap(new_res->s, new_res->index_i, new_res->index_j, G->V);
-        //new_res3 = swap_2opt(curr_s);
-        //print_tabu_list(tabu_list);
-        //print_resultlocalsearch(new_res);
-        // local_search
-        index_tabu = is_in_tabu_list(tabu_list, new_res3->index_i, new_res3->index_j);
+        random_swap_pointer(curr_s, index);
+        fixed_swap_pointer(curr_s, index);
+        index_tabu = is_in_tabu_list(tabu_list, index[0], index[1]);
         if (index_tabu == -1)
         {
-            // aceita, e insere na lista
-            // se precisar, remove o item mais antigo da lista
-            //copy_solution(curr_s, new_res3->s->port);
-            aux = curr_s;
-            curr_s =  new_res3->s; 
-            free_solution(aux);
-            insert_tabu_list(tabu_list, new_res3->index_i, new_res3->index_j, iter_restricao);
+            copy_solution(stored_s, curr_s);
+            insert_tabu_list(tabu_list, index[0], index[1], iter_restricao);
         }
-        else if (fitness(new_res3->s) < (fitness(best_s)))
+        else if (curr_s->distance < (best_s->distance))
         {
-            // verifica se é melhor que a melhor encontrada com diferença em x%
-            // se sim, aceita a solução
-            aux = curr_s;
-            curr_s =  new_res3->s;
-            free_solution(aux);
+            copy_solution(stored_s, curr_s);
             remove_tabu_move(tabu_list, index_tabu);
         }
-        //print_tabu_list(tabu_list);
         update_tabu_counter(tabu_list);
 
-        if (fitness(curr_s) < fitness(best_s))
+        if (stored_s->distance < best_s->distance)
         {
-            //copy_solution(best_s, curr_s->port);
-            aux = best_s;
-            best_s = curr_s;  
-            free_solution(aux);
+            copy_solution(best_s, stored_s);
             iter_no_improv = 0;
         }
         else
@@ -71,12 +54,12 @@ Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_
             iter_no_improv++;
         }
 
-        free_resultlocalsearch(new_res);
-        //free_resultlocalsearch(new_res2);
-        free_resultlocalsearch(new_res3);
+        copy_solution(stored_s, curr_s);
     }
     free_solution(curr_s);
+    free_solution(stored_s);
     free_tabu_list(tabu_list);
+    free(index);
     return best_s;
 }
 

@@ -10,15 +10,15 @@ node_t *new_node(int index_i, int index_j, int T_iter){
     
     return node;
 }
-list_t *new_list(){
-    list_t *list = malloc(sizeof(list_t));
+list_tuples *new_list(){
+    list_tuples *list = malloc(sizeof(list_tuples));
 
     list->head = NULL;
     list->size_list = 0;
 
     return list;
 }
-void free_list(list_t *list){
+void free_list(list_tuples *list){
     while(list->head != NULL){
         node_t *aux;
         aux = list->head;
@@ -29,7 +29,7 @@ void free_list(list_t *list){
     free(list);
 }
 
-node_t *list_at(list_t *list, int position){
+node_t *list_at(list_tuples *list, int position){
     node_t *aux = list->head;
 
     for(int i=0; i < position && aux != NULL; i++){
@@ -37,12 +37,12 @@ node_t *list_at(list_t *list, int position){
     }
     return aux;
 }
-void list_set(list_t *list, int position, int index_i, int index_j){
+void list_set(list_tuples *list, int position, int index_i, int index_j){
     node_t *node = list_at(list, position);
     node->index_i = index_i;
     node->index_j = index_j;
 }
-int list_size(list_t *list){
+int list_size(list_tuples *list){
     node_t *aux = list->head;
     int i = 0;
 
@@ -53,7 +53,7 @@ int list_size(list_t *list){
     list->size_list = i;
     return (int) i;
 }
-void print_list(list_t *list){
+void print_list(list_tuples *list){
     node_t *aux = list->head;
     while(aux != NULL){
         printf("(%d,%d)", aux->index_i, aux->index_j);
@@ -65,7 +65,7 @@ void print_list(list_t *list){
     printf("\n");
 }
 
-void list_insert(list_t *list, int index_i, int index_j, int T_iter, int position){
+void list_insert(list_tuples *list, int index_i, int index_j, int T_iter, int position){
     node_t *node = new_node(index_i, index_j, T_iter);
 
     if(position == 0){
@@ -78,14 +78,14 @@ void list_insert(list_t *list, int index_i, int index_j, int T_iter, int positio
     }
     list->size_list++;
 }
-void list_push_front(list_t *list, int index_i, int index_j, int T_iter){
+void list_push_front(list_tuples *list, int index_i, int index_j, int T_iter){
     list_insert(list, index_i, index_j, T_iter, 0);
 }
-void list_push_back(list_t *list, int index_i, int index_j, int T_iter){
+void list_push_back(list_tuples *list, int index_i, int index_j, int T_iter){
     list_insert(list, index_i, index_j, T_iter, list->size_list);
 }
 
-void list_erase(list_t *list, int position){
+void list_erase(list_tuples *list, int position){
     node_t *aux, *ptr;
     if(position == 0){
         ptr = list->head;
@@ -98,9 +98,9 @@ void list_erase(list_t *list, int position){
     free(ptr);
     list->size_list--;
 }
-void list_pop_front(list_t *list){
+void list_pop_front(list_tuples *list){
     list_erase(list, 0);
 }
-void list_pop_back(list_t *list){
+void list_pop_back(list_tuples *list){
     list_erase(list, list->size_list-1);
 }
