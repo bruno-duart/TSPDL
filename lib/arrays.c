@@ -8,14 +8,6 @@ int *array_init(int n)
     return arr;
 }
 
-int* array_copy(int *arr, int n)
-{
-	int *new_arr = malloc(sizeof(int) * n);
-    while(n--)
-        new_arr[n] = arr[n];
-    return new_arr;
-}
-
 void array_print(int *arr, int n)
 {
     for (int i = 0; i < n; i++)

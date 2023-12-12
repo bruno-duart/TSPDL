@@ -20,7 +20,7 @@ void lsearch_random(Solution *s){
 void lsearch_greedy(Solution *s)
 {
     int weight = G->V - 1, smaller, position, k = 0;
-    int *demand = array_copy(DEMAND, G->V);
+    int *demand = array_duplicate(DEMAND, G->V);
 
     for (int i = 0; i < G->V; i++)
     {
@@ -54,7 +54,7 @@ void lsearch_pseudo_greedy(Solution *s)
         e em seguida, aplica-se o método guloso para obter uma solução viável.
     */
     int port1, port2, weight = G->V - 1, smaller, position, k;
-    int *demand = array_copy(DEMAND, G->V);
+    int *demand = array_duplicate(DEMAND, G->V);
 
     // Seleção dos dois portos iniciais. Port1 e port2 devem ser diferentes entre si
     // e devem ser viáveis.
@@ -103,7 +103,7 @@ bool lsearch_try_port_swap(Solution *s, int i, int j)
 	array_swap(s->route, i, j);
 	if(solution_is_valid(s))
 	{
-		s->distance = fitness(s);
+		s->distance = fitness(s->route);
 		return true;
 	}
 	else
@@ -113,12 +113,12 @@ bool lsearch_try_port_swap(Solution *s, int i, int j)
 	}
 }
 
-bool lsearch_chose_better(SolutionChangeTrack *sctCurr, Solution& *sCandidate, int *index)
+bool lsearch_chose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index)
 {
         if (sCandidate->distance < sctCurr->s->distance)
         {
             solution_copy(sCandidate, sctCurr->s);
-            array_copy(index, sctCurr->change);
+            array_copy(index, sctCurr->change, G->V);
             return true;
         }
         return false;
@@ -128,7 +128,7 @@ void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
 {
 	Solution *sAux = new_solution();
 	bool valid_swap;
-    int *index[2];
+    int index[2];
 
     while(max_swaps--)
     {
@@ -144,7 +144,7 @@ void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
 void lsearch_fixed_swap(SolutionChangeTrack *sctCurr)
 {
 	Solution *sAux = new_solution();
-    int *index[2];
+    int index[2];
 
     for (int i = 0; i < DIM-1; i++)
     {

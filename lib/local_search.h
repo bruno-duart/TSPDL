@@ -19,7 +19,7 @@ void lsearch_pseudo_greedy(Solution *s);
 /// @brief Performs a Local-Search procedure using a random-swap technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
+void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps);
 
 // /// @brief Performs a Local-Search procedure using a fixed_swap technique
 // /// @param s Solution to be refined
@@ -28,6 +28,6 @@ void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
 /// @brief Performs a Local-Search procedure using a fixed_swap technique
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
-void lsearch_fixed_swap(SolutionChangeTrack *sctCurr)
+void lsearch_fixed_swap(SolutionChangeTrack *sctCurr);
 
 #endif
