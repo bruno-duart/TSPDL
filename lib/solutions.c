@@ -83,6 +83,13 @@ void solution_copy(Solution *sSource, Solution *sTarget)
     sTarget->distance = sSource->distance;
 }
 
+Solution* solution_duplicate(Solution *sSource)
+{
+	Solution *sTarget = new_solution();
+	solution_copy(sSource, sTarget);
+	return sTarget;
+}
+
 void solution_print(Solution *s)
 {
     array_print(s->route, DIM);
@@ -93,6 +100,8 @@ SolutionChangeTrack* new_changetrack(Solution *s, int n)
 {
 	SolutionChangeTrack* sct = malloc(sizeof(SolutionChangeTrack));
 	sct->change = malloc(sizeof(int) * n);
+	for(int i=0; i < n; i++)
+		sct->change[i] = -1;
 	sct->s = s;
 	sct->n = n;
 	return sct;
@@ -104,4 +113,13 @@ void free_changetrack(SolutionChangeTrack *sct, bool keep_solution)
 		free_solution(sct->s);
 	free(sct->change);
 	free(sct);
+}
+
+SolutionChangeTrack* changetrack_duplicate(SolutionChangeTrack *sctSource)
+{
+	SolutionChangeTrack* sctTarget = new_changetrack(sctSource->s, sctSource->n);
+	sctTarget->s = solution_duplicate(sctSource->s);
+	for(int i=0; i < sctSource->n; i++)
+		sctTarget->change[i] = sctSource->change[i];
+	return sctTarget;
 }

@@ -70,6 +70,8 @@ int solution_atleast(Solution **sArr, int cost);
 /// @param ports Route of ports to be copied
 void solution_copy(Solution *sSource, Solution *sTarget);
 
+Solution* solution_duplicate(Solution *sSource);
+
 /// @brief Print a Solution s into the terminal
 /// @param s Solution to be printed
 void solution_print(Solution* s);
@@ -77,5 +79,6 @@ void solution_print(Solution* s);
 
 SolutionChangeTrack* new_changetrack(Solution *s, int n);
 void free_changetrack(SolutionChangeTrack *sct, bool keep_solution);
+SolutionChangeTrack* changetrack_duplicate(SolutionChangeTrack *sctSource);
 
 #endif

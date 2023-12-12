@@ -22,4 +22,3 @@ void array_print(int *arr, int n)
         printf(" %d ", arr[i]); // erro com valor não inicializado, por conta do 'i'
     printf("\n");
 }
-
