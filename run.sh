@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
-INSTANCE="instances/$1.txt"
-./tspdl_solver $INSTANCE
+INSTANCE="data/$1.txt"
+./tspdl < $INSTANCE
