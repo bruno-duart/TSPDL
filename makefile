@@ -17,6 +17,11 @@ solutions.o: ${SOURCE}/solutions.h ${SOURCE}/solutions.c
 lists.o: ${SOURCE}/solutions.h ${SOURCE}/lists.h ${SOURCE}/lists.c
 	gcc -o ${TARGET}/lists.o ${SOURCE}/lists.c ${CC_FLAGS}
 
+local_search.o: ${SOURCE}/solutions.h ${SOURCE}/local_search.h ${SOURCE}/local_search.c
+	gcc -o ${TARGET}/lists.o ${SOURCE}/lists.c ${CC_FLAGS}
+
+
+
 
 containers: arrays.o graphs.o solutions.o lists.o
 
