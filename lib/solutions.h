@@ -21,7 +21,7 @@ typedef struct solutionchangetrack_t {
 /// @brief Computes the fitnness (cost of route) of a port's sequence
 /// @param port Sequence of ports
 /// @return Cost(Distance) of route - Integer
-inline int fitness(int *route)
+static inline int fitness(int *route)
 {
 	int pA, pB = 0, distance = 0;
 
