@@ -1,3 +1,7 @@
+/*
+ *	make all && ./run.sh burma14_10_1
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -39,6 +43,10 @@ int main()
     lsearch_greedy_init(sct->s);
     solution_print(sct->s);
     
+    printf("\n>>> Random constructor\n");
+    lsearch_random_init(sct->s);
+    solution_print(sct->s);
+    
     printf("\n>>> Random swap\n");
     lsearch_random_swap(sct, 1000);
     solution_print(sct->s);
@@ -46,6 +54,8 @@ int main()
     printf("\n>>> Fixed swap\n");
     lsearch_fixed_swap(sct);
     solution_print(sct->s);
+    
+    
     /*Solution* ns = tabu_search(s, G, 30, 10, 3);
     print_solution(ns);
 

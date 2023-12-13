@@ -108,7 +108,7 @@ bool lsearch_try_port_swap(Solution *s, int i, int j)
 	}
 	else
 	{
-		array_swap(s->route, i, j);
+		//array_swap(s->route, i, j);
 		return false;
 	}
 }
@@ -126,7 +126,7 @@ bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, i
 
 void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
 {
-	Solution *sAux = new_solution();
+	Solution *sAux = solution_duplicate(sctCurr->s);
 	bool valid_swap;
     int index[2];
 
@@ -136,14 +136,17 @@ void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
         index[1] = randintavoid(0, G->V - 1, index[0]);
         valid_swap = lsearch_try_port_swap(sAux, index[0], index[1]);
         if(valid_swap && lsearch_choose_better(sctCurr, sAux, index))
+        {
+        	printf("x\n");
         	break;
+        }
     }
     free_solution(sAux);
 }
 
 void lsearch_fixed_swap(SolutionChangeTrack *sctCurr)
 {
-	Solution *sAux = new_solution();
+	Solution *sAux = solution_duplicate(sctCurr->s);
     int index[2];
 
     for (int i = 0; i < DIM-1; i++)
