@@ -9,9 +9,7 @@ node_t *new_node(Solution* s, int T_iter){
      * @return node: novo nó criado
     */
     node_t *node = malloc(sizeof(node_t));
-    
-    node->s = new_solution();
-    solution_copy(node->s, s);
+    node->s = solution_duplicate(s);
     node->count_iter = T_iter;
     node->next = NULL;
     

@@ -60,3 +60,4 @@ dkms.conf
 
 # Ignore compiled executables
 main
+tspdl

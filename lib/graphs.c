@@ -1,50 +1,49 @@
 #include "graphs.h"
 
-int** new_matrix(int row, int columns){
-    int val;
-    int **m = malloc(sizeof(int*) * row);
-    for(Type i = 0; i < row; i++)
-        m[i] = malloc(sizeof(int) * columns);
-    for(Type i = 0; i < row; i++)
-        for(Type j = 0; j < columns; j++){
-            scanf("%d", &val);
-            m[i][j] = val;
-        }
+EdgeType** matrix_init(int row, int columns){
+    EdgeType val;
+    EdgeType **m = malloc(sizeof(EdgeType*) * row);
+    for(int i = 0; i < row; i++)
+    {
+        m[i] = malloc(sizeof(EdgeType) * columns);
+        for(int j = 0; j < columns; j++)
+            scanf("%d", &(m[i][j]));
+    }
     return m;
 }
 
-Graph* new_graph(int V){
+Graph* graph_init(int N){
     Graph *G = malloc(sizeof(Graph));
-    G->V = V;
-    G->A = 0;
-    G->adj = new_matrix(V, V);
+    G->N = N;
+    G->M = 0;
+    G->adj = matrix_init(N, N);
     return G;
 }
 
 void free_graph(Graph *G){
-    for(int i=0; i < G->V; i++)
+    for(int i=0; i < G->N; i++)
         free(G->adj[i]);
     free(G->adj);
     free(G);
 }
 
-void graph_insert_arc(Graph *G, Type i, Type j, Type value){
+void graph_insert_arc(Graph *G, int i, int j, EdgeType value){
     if (G->adj[i][j] == 0){
         G->adj[i][j] = value;
-        G->A++;
+        G->M++;
     }
 }
 
-void graph_remove_arc(Graph *G, Type i, Type j){
+void graph_remove_arc(Graph *G, int i, int j){
     if(G->adj[i][j] != 0){
         G->adj[i][j] = 0;
-        G->A--;
+        G->M--;
     }
 }
 
 void graph_print(Graph *G){
-    for(int i=0; i < G->V; i++){
-        for(int j=0; j < G->V; j++)
+    for(int i=0; i < G->N; i++){
+        for(int j=0; j < G->N; j++)
             printf("%4d ", G->adj[i][j]);
         printf("\n");
     }

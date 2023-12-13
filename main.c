@@ -21,9 +21,7 @@ int main()
 
     // Arrays and Matrices initialization
     scanf("%d", &DIM);
-    G = new_graph(DIM);
-    DEMAND = array_init(DIM);
-    DRAFT = array_init(DIM);
+    ProblemInstance *pinst = pinstance_init(DIM);
     scanf("%d", &OPT_VAL);
 
     // Stopping criteria
@@ -36,12 +34,8 @@ int main()
     // print_arr(DEMAND);
     // print_arr(DRAFT);
 
-    Solution* s = new_solution();
+    Solution* s = new_solution(pinst);
     SolutionChangeTrack* sct = new_changetrack(s, 2);
-    
-    printf("\n>>> Greedy constructor\n");
-    lsearch_greedy_init(sct->s);
-    solution_print(sct->s);
     
     printf("\n>>> Random constructor\n");
     lsearch_random_init(sct->s);
@@ -55,6 +49,10 @@ int main()
     lsearch_fixed_swap(sct);
     solution_print(sct->s);
     
+    printf("\n>>> Greedy constructor\n");
+    lsearch_greedy_init(sct->s);
+    solution_print(sct->s);
+    
     
     /*Solution* ns = tabu_search(s, G, 30, 10, 3);
     print_solution(ns);
@@ -63,10 +61,8 @@ int main()
 
     //printf("%d,%f", best, (double)tempo / CLOCKS_PER_SEC);*/
     free_solution(s);
+    free_pinstance(pinst);
     //free_solution(ns);
-    free_graph(G);
-    free(DEMAND);
-    free(DRAFT);
-
+    
     return 0;
 }

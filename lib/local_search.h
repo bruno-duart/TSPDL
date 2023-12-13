@@ -1,7 +1,6 @@
 #ifndef HEADER_LOCAL_SEARCH
 #define HEADER_LOCAL_SEARCH
 
-
 #include "arrays.h"
 #include "solutions.h"
 

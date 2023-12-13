@@ -3,22 +3,26 @@
 
 #include "presets.h"
 
+#ifndef EdgeType
+#define EdgeType int
+#endif
+
 typedef struct {
-    int V;
-    int A;
-    int **adj;
+    int N;
+    int M;
+    EdgeType **adj;
 }Graph;
 
 
-int** new_matrix(int row, int columns);
+int** matrix_init(int row, int columns);
 
-Graph* new_graph(int V);
+Graph* graph_init(int N);
 
 void free_graph(Graph *G);
 
-void graph_insert_arc(Graph *G, Type i, Type j, Type value);
+void graph_insert_arc(Graph *G, int i, int j, EdgeType value);
 
-void graph_remove_arc(Graph *G, Type i, Type j);
+void graph_remove_arc(Graph *G, int i, int j);
 
 void graph_print(Graph *G);
 

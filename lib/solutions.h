@@ -3,13 +3,21 @@
 
 #include "presets.h"
 #include "graphs.h"
-#include "globals.h"
 #include "arrays.h"
 
-/// @brief 
+/// @brief
+
+typedef struct probinstance_t {
+	Graph *graph;
+	int *demand;
+	int *draft;
+} ProblemInstance;
+ 
 typedef struct solution_t {
     int *route;
     int distance;
+    int dim;
+	ProblemInstance *pinst;
 } Solution;
 
 typedef struct solutionchangetrack_t {
@@ -21,22 +29,26 @@ typedef struct solutionchangetrack_t {
 /// @brief Computes the fitnness (cost of route) of a port's sequence
 /// @param port Sequence of ports
 /// @return Cost(Distance) of route - Integer
-static inline int fitness(int *route)
+static inline void update_fitness(Solution *s)
 {
 	int pA, pB = 0, distance = 0;
+	int **edge = s->pinst->graph->adj;
 
-    for (int i = 0; i < G->V; i++)
+    for (int i = 0; i < s->dim; i++)
     {
     	pA = pB;
-    	pB = route[i];
-        distance += G->adj[pA][pB];
+    	pB = s->route[i];
+        distance += edge[pA][pB];
     }
-    return distance;
+    s->distance = distance;
 }
+
+ProblemInstance* pinstance_init(int dim);
+void free_pinstance(ProblemInstance *pinst);
 
 /// @brief Initializes a new variable of Solution type
 /// @return A reference to a Solution variable
-Solution* new_solution();
+Solution* new_solution(ProblemInstance *pinst);
 
 /// @brief Deallocate memory of a Solution type variable
 /// @param S Solution to be deallocated
@@ -77,7 +89,7 @@ Solution* solution_duplicate(Solution *sSource);
 void solution_print(Solution* s);
 
 
-SolutionChangeTrack* new_changetrack(Solution *s, int n);
+SolutionChangeTrack* new_changetrack(Solution *s, int n_changes);
 void free_changetrack(SolutionChangeTrack *sct, bool keep_solution);
 SolutionChangeTrack* changetrack_duplicate(SolutionChangeTrack *sctSource);
 
