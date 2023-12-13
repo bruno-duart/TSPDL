@@ -1,52 +1,65 @@
 #include "lists.h"
 
-node_t *new_node(Solution* s, int T_iter){
+PointerNode *new_pnode(void *p, int value){
     /**
      * Função para criar um novo nó na lista
      * @param index_i: índice do vértice alterado
      * @param undo_color: cor que desfaz a alteração
-     * @param T_iter: número de iterações que o movimento é tabu
+     * @param value: número de iterações que o movimento é tabu
      * @return node: novo nó criado
     */
-    node_t *node = malloc(sizeof(node_t));
-    node->s = solution_duplicate(s);
-    node->count_iter = T_iter;
+    PointerNode *node = malloc(sizeof(PointerNode));
+    node->p = p;
+    node->value = value;
     node->next = NULL;
-    
     return node;
 }
 
-list_t *new_list(){
+PointerNode *new_snode(Solution* s, int value){
+    Solution *sNew = solution_duplicate(s);
+    return new_pnode((void*) sNew, value);
+}
+
+PointerNode *new_2inode(int i, int j, int value){
+    int *arr = malloc(sizeof(int) * 2);
+    arr[0] = i;
+    arr[1] = j;
+    return new_pnode((void*) arr, value);
+}
+
+void free_pnode(PointerNode *node, ptr_handler_t free_content)
+{
+	if(free_content != NULL)
+		(*free_content)(node->p);
+	free(node);
+}
+
+PointerList *new_plist(){
     /**
      * Função para criar uma nova lista
      * @return list: retorna a lista que foi criada
     */
-    list_t *list = malloc(sizeof(list_t));
-
+    PointerList *list = malloc(sizeof(PointerList));
     list->head = NULL;
     list->size_list = 0;
-
     return list;
 }
 
-void free_list(list_t *list){
+void free_plist(PointerList *list, ptr_handler_t free_content){
     /**
      * Libera a memória alocada para a lista
      * @param list: lista a ter memória liberada
     */
-    
     while(list->head != NULL){
-        node_t *aux;
+        PointerNode *aux;
         aux = list->head;
-        free_solution(aux->s);
         list->head = aux->next;
-        free(aux);
+        free_pnode(aux, free_content);
     }
-
     free(list);
 }
 
-node_t *list_at(list_t *list, int position){
+PointerNode *plist_at(PointerList *list, int position){
     /**
      * Função que percorre a lista até uma determinada posição
      * e retorna um ponteiro para o nó que a ocupa
@@ -54,7 +67,7 @@ node_t *list_at(list_t *list, int position){
      * @param position: posição desejada
      * @return aux: ponteiro para a posição desejada
     */
-    node_t *aux = list->head;
+    PointerNode *aux = list->head;
 
     for(int i=0; i < position && aux != NULL; i++){
         aux = aux->next;
@@ -62,7 +75,7 @@ node_t *list_at(list_t *list, int position){
     return aux;
 }
 
-void list_set(list_t *list, int position, Solution* s){
+void plist_set(PointerList *list, int position, void *p){
     /**
      * Função que altera os valores de um nó na lista.
      * @param list: lista a ter algum valor alterado
@@ -70,16 +83,16 @@ void list_set(list_t *list, int position, Solution* s){
      * @param index_i: novo índice de vértice
      * @param undo_color: nova cor
     */
-    node_t *node = list_at(list, position);
-    solution_copy(node->s, s);
+    PointerNode *node = plist_at(list, position);
+    node->p = p;
 }
 
-int list_size(list_t *list){
+int plist_size(PointerList *list){
     /**
      * Função que retorna o tamanho da lista
      * @param list: lista a ter o tamanho calculado
     */
-    node_t *aux = list->head;
+    PointerNode *aux = list->head;
     int i = 0;
 
     while(aux != NULL){
@@ -90,15 +103,15 @@ int list_size(list_t *list){
     return (int) i;
 }
 
-void print_list(list_t *list){
+void plist_print(PointerList *list, ptr_handler_t print_content){
     /**
      * Função para exibir a lista no console.
      * @param list: lista ser exibida
     */
-    node_t *aux = list->head;
+    PointerNode *aux = list->head;
     while(aux != NULL){
         //printf("(%d,%d)", aux->index_i, aux->undo_color);
-        solution_print(aux->s);
+        print_content(aux->p);
         if(aux->next != NULL){
             printf("->");
         }
@@ -107,86 +120,82 @@ void print_list(list_t *list){
     printf("\n");
 }
 
-void list_insert(list_t *l, Solution* s, int T_iter, int position){
+void plist_insert(PointerList *l, void *p, int value, int position){
     /**
      * Função para inserir um novo nó na lista.
      * @param list: lista a ter um novo nó
      * @param index_i: índice do vértice correspondente
      * @param undo_color: cor que desfaz o movimento tabu
-     * @param T_iter: número de iterações com o movimento restrito
+     * @param value: número de iterações com o movimento restrito
      * @param position: posição onde o novo nó deve ser inserido
     */
-    node_t *node = new_node(s, T_iter);
+    PointerNode *node = new_pnode(p, value);
 
     if(position == 0){
         node->next = l->head;
         l->head = node;
     } else{
-        node_t *aux = list_at(l, position-1);
+        PointerNode *aux = plist_at(l, position-1);
         node->next = aux->next;
         aux->next = node;
     }
     l->size_list++;
 }
 
-void list_push_front(list_t *l, Solution* s, int T_iter){
+void plist_push_front(PointerList *l, void *p, int value){
     /**
      * Função para inserir um vértice no início da lista
      * @param l: lista a ter um novo nó
      * @param index_i: índice do vértice correspondente
      * @param undo_color: cor que desfaz o movimento tabu
-     * @param T_iter: número de iterações com o movimento restrito
+     * @param value: número de iterações com o movimento restrito
     */
-    list_insert(l, s, T_iter, 0);
+    plist_insert(l, p, value, 0);
 }
 
-void list_push_back(list_t *l, Solution* s, int T_iter){
+void plist_push_back(PointerList *l, void *p, int value){
     /**
      * Função para inserir um vértice no final da lista
      * @param l: lista a ter um novo nó
      * @param index_i: índice do vértice correspondente
      * @param undo_color: cor que desfaz o movimento tabu
-     * @param T_iter: número de iterações com o movimento restrito
+     * @param value: número de iterações com o movimento restrito
     */
-    list_insert(l, s, T_iter, l->size_list);
+    plist_insert(l, p, value, l->size_list);
 }
 
-void list_erase(list_t *l, int position){
+void plist_erase(PointerList *l, int position, ptr_handler_t free_content){
     /**
      * Função para apagar um elemento de uma lista, 
      * em uma determinada posição.
      * @param l: lista a ter um elemento removido
      * @param position: posição do elemento a ser removido
     */
-    node_t *aux, *ptr;
-    Solution* value;
+    PointerNode *aux, *ptr;
     if(position == 0){
         ptr = l->head;
         l->head = ptr->next;
-        value = ptr->s;
     } else{
-        aux = list_at(l, position-1);
+        aux = plist_at(l, position-1);
         ptr = aux->next;
-        value = ptr->s;
         aux->next = ptr->next;
     }
-    free_solution(value);
-    free(ptr);
+    free_pnode(ptr, free_content);
     l->size_list--;
 }
 
-void list_pop_front(list_t *l){
+void plist_pop_front(PointerList *l, ptr_handler_t free_content){
     /**
      * Função para remover o primeiro elemento da lista
      * @param l: lista a ter o primeiro elemento removido
     */
-    list_erase(l, 0);
+    plist_erase(l, 0, free_content);
 }
 
-void list_pop_back(list_t *l){
+void plist_pop_back(PointerList *l, ptr_handler_t free_content){
     /**
      * Função para remover o último elemento da lista
      * @param l: lista a ter o último elemento removido
     */
-     list_erase(l, l->size_list-1);
+     plist_erase(l, l->size_list-1, free_content);
 }
