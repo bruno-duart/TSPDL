@@ -69,7 +69,7 @@ bool solution_compare(Solution* sA, Solution* sB);
 /// @param port Port to be searched in route
 /// @param route Route to be verified
 /// @return 1 if is in route, else 0
-bool solution_isin(Solution* s, int port);
+bool solution_is_in(Solution* s, int port);
 
 /// @brief Verifies if the arrays of Solutions has at least one solution with cost = value
 /// @param Arr Array of Solutions to be verified

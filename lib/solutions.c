@@ -72,7 +72,7 @@ bool solution_compare(Solution* sA, Solution* sB)
     return true;
 }
 
-bool solution_isin(Solution* s, int port)
+bool solution_is_in(Solution* s, int port)
 {
     for (int i = 0; i < s->dim; i++)
         if (s->route[i] == port)
