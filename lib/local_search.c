@@ -1,6 +1,6 @@
 #include "local_search.h"
 
-void lsearch_random_init(Solution *s){
+void constructor_random(Solution *s){
 	int dim = s->dim;
     s->route[dim-1] = 0;
     do{
@@ -18,7 +18,29 @@ void lsearch_random_init(Solution *s){
     update_fitness(s);
 }
 
-void lsearch_greedy_init(Solution *s)
+void constructor_random_guided(Solution *s)
+{
+	int port, weight = s->dim - 1;
+    bool* visited = calloc(s->dim, sizeof(bool));
+    int *demand = s->pinst->demand;
+    int *draft = s->pinst->draft;
+    
+    s->route[s->dim - 1] = 0; 
+ 
+    for(int i=0; i < s->dim - 1; i++){ 
+        port = randint(1, s->dim - 1); 
+        if (visited[port] || weight > draft[port] || weight < demand[port]) { 
+            i--;
+            continue;
+        }
+        s->route[i] = port;
+        visited[port] = true;
+        weight--;
+    }
+	update_fitness(s);
+}
+
+void constructor_greedy(Solution *s)
 {
 	int dim = s->dim;
     int weight = dim-1, smaller, position, k = 0;
@@ -50,7 +72,7 @@ void lsearch_greedy_init(Solution *s)
     free(demand);
 }
 
-void lsearch_pseudo_greedy(Solution *s)
+void constructor_pseudo_greedy(Solution *s)
 {
     /*
         Constrói uma solução viável para o conjunto de soluções relativo à
@@ -136,19 +158,14 @@ bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, i
 void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
 {
 	Solution *sAux = solution_duplicate(sctCurr->s);
-	bool valid_swap;
     int index[2], valid_ports = sctCurr->s->dim - 1;
 
     while(max_swaps--)
     {
         index[0] = randint(0, valid_ports);
         index[1] = randintavoid(0, valid_ports, index[0]);
-        valid_swap = lsearch_try_port_swap(sAux, index[0], index[1]);
-        if(valid_swap && lsearch_choose_better(sctCurr, sAux, index))
-        {
-        	printf("x\n");
-        	break;
-        }
+        if(lsearch_try_port_swap(sAux, index[0], index[1]))
+			lsearch_choose_better(sctCurr, sAux, index);
     }
     free_solution(sAux);
 }

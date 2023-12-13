@@ -9,14 +9,26 @@
 //#include "lib/meta_index_tabu.h"
 #include "lib/local_search.h"
 
-Graph *G;
+typedef struct time_diff_t {
+	clock_t ti;
+	clock_t tf;
+} TimeDiff;
+
+void tick(TimeDiff *tdiff){
+	tdiff->ti = clock();
+};
+
+double tack(TimeDiff *tdiff){
+	tdiff->tf = clock();
+	return (double)(tdiff->tf - tdiff->ti) / CLOCKS_PER_SEC;
+};
+
 size_t CONT_GER;
 int DIM, PSIZE, MAX_ITER, NUM_TESTES, OPT_VAL;
-int *DEMAND, *DRAFT;
 
 int main()
 {
-    //clock_t tempo;
+    TimeDiff tdiff;
     srand(time(NULL));
 
     // Arrays and Matrices initialization
@@ -37,20 +49,29 @@ int main()
     Solution* s = new_solution(pinst);
     SolutionChangeTrack* sct = new_changetrack(s, 2);
     
-    printf("\n>>> Random constructor\n");
-    lsearch_random_init(sct->s);
+    tick(&tdiff);
+    constructor_random(sct->s);
+	printf("\n>>> Random constructor (%.2fms)\n", 1000*tack(&tdiff));
     solution_print(sct->s);
     
-    printf("\n>>> Random swap\n");
+    tick(&tdiff);
+    constructor_random_guided(sct->s);
+	printf("\n>>> Random guided constructor (%.2fms)\n", 1000*tack(&tdiff));
+    solution_print(sct->s);
+    
+    tick(&tdiff);
     lsearch_random_swap(sct, 1000);
+	printf("\n>>> Random swap (%.2fms | 1k)\n", 1000*tack(&tdiff));
     solution_print(sct->s);
     
-    printf("\n>>> Fixed swap\n");
+    tick(&tdiff);
     lsearch_fixed_swap(sct);
+	printf("\n>>> Fixed swap (%.2fms)\n", 1000*tack(&tdiff));
     solution_print(sct->s);
     
-    printf("\n>>> Greedy constructor\n");
-    lsearch_greedy_init(sct->s);
+    tick(&tdiff);
+    constructor_greedy(sct->s);
+	printf("\n>>> Greedy constructor (%.2fms)\n", 1000*tack(&tdiff));
     solution_print(sct->s);
     
     

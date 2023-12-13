@@ -4,18 +4,19 @@
 #include "arrays.h"
 #include "solutions.h"
 
-void lsearch_random_init(Solution *s);
+void constructor_random(Solution *s);
+void constructor_random_guided(Solution *s);
 
 /// @brief Build a new solution to the TSPDL using the greedy method
 /// @return A new solution.
-void lsearch_greedy_init(Solution *s);
+void constructor_greedy(Solution *s);
+void constructor_pseudo_greedy(Solution *s);
 /// @brief Build a new solution to the TSPDL. It uses a greedy_method, after choosing the first two ports randomly.
 /// @return A new solution.
 
 bool lsearch_try_swap(Solution *s, int i, int j);
 bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index);
 
-void lsearch_pseudo_greedy(Solution *s);
 
 /// @brief Performs a Local-Search procedure using a random-swap technique
 /// @param s Solution to be refined
@@ -30,5 +31,6 @@ void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps);
 /// @param s Solution to be refined
 /// @return A new solution and the indexes of the interval of changed ports
 void lsearch_fixed_swap(SolutionChangeTrack *sctCurr);
+
 
 #endif

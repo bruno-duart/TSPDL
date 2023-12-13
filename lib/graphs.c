@@ -7,7 +7,10 @@ EdgeType** matrix_init(int row, int columns){
     {
         m[i] = malloc(sizeof(EdgeType) * columns);
         for(int j = 0; j < columns; j++)
-            scanf("%d", &(m[i][j]));
+       	{
+            scanf("%d", &val);
+            m[i][j] = val;
+        }
     }
     return m;
 }
