@@ -33,8 +33,19 @@ int main()
     // print_arr(DRAFT);
 
     Solution* s = new_solution();
-    lsearch_greedy(s);
-    solution_print(s);
+    SolutionChangeTrack* sct = new_changetrack(s, 2);
+    
+    printf("\n>>> Greedy constructor\n");
+    lsearch_greedy_init(sct->s);
+    solution_print(sct->s);
+    
+    printf("\n>>> Random swap\n");
+    lsearch_random_swap(sct, 1000);
+    solution_print(sct->s);
+    
+    printf("\n>>> Fixed swap\n");
+    lsearch_fixed_swap(sct);
+    solution_print(sct->s);
     /*Solution* ns = tabu_search(s, G, 30, 10, 3);
     print_solution(ns);
 

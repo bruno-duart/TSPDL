@@ -5,16 +5,16 @@
 #include "arrays.h"
 #include "solutions.h"
 
-void lsearch_random(Solution *s);
+void lsearch_random_init(Solution *s);
 
 /// @brief Build a new solution to the TSPDL using the greedy method
 /// @return A new solution.
-void lsearch_greedy(Solution *s);
+void lsearch_greedy_init(Solution *s);
 /// @brief Build a new solution to the TSPDL. It uses a greedy_method, after choosing the first two ports randomly.
 /// @return A new solution.
 
 bool lsearch_try_swap(Solution *s, int i, int j);
-bool lsearch_chose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index);
+bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index);
 
 void lsearch_pseudo_greedy(Solution *s);
 

@@ -1,6 +1,6 @@
 #include "local_search.h"
 
-void lsearch_random(Solution *s){
+void lsearch_random_init(Solution *s){
     s->route[G->V-1] = 0;
     do{
         for(int i=0; i<G->V-1; i++)
@@ -17,7 +17,7 @@ void lsearch_random(Solution *s){
     s->distance = fitness(s->route);
 }
 
-void lsearch_greedy(Solution *s)
+void lsearch_greedy_init(Solution *s)
 {
     int weight = G->V - 1, smaller, position, k = 0;
     int *demand = array_duplicate(DEMAND, G->V);
@@ -113,7 +113,7 @@ bool lsearch_try_port_swap(Solution *s, int i, int j)
 	}
 }
 
-bool lsearch_chose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index)
+bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index)
 {
         if (sCandidate->distance < sctCurr->s->distance)
         {
@@ -135,7 +135,7 @@ void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
         index[0] = randint(0, G->V - 1);
         index[1] = randintavoid(0, G->V - 1, index[0]);
         valid_swap = lsearch_try_port_swap(sAux, index[0], index[1]);
-        if(valid_swap && lsearch_chose_better(sctCurr, sAux, index))
+        if(valid_swap && lsearch_choose_better(sctCurr, sAux, index))
         	break;
     }
     free_solution(sAux);
@@ -154,7 +154,7 @@ void lsearch_fixed_swap(SolutionChangeTrack *sctCurr)
 			{
 				index[0] = i;
 				index[1] = j;
-				lsearch_chose_better(sctCurr, sAux, index);
+				lsearch_choose_better(sctCurr, sAux, index);
 			}
 		}
 	}

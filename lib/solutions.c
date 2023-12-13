@@ -17,11 +17,7 @@ void free_solution(Solution *s)
 bool solution_is_valid(Solution *s)
 {
     int weight = G->V - 1;
-    int demand[DIM];
-
-    // copia a demanda
-    for (int i = 0; i < G->V; i++)
-        demand[i] = DEMAND[i];
+    int *demand = array_duplicate(DEMAND, DIM);
 
     for (int i = 0; i < G->V - 1; i++)
     {
