@@ -15,12 +15,12 @@ PointerNode *new_pnode(void *p, int value){
     return node;
 }
 
-PointerNode *new_snode(Solution* s, int value){
+PointerNode *new_pnode_sol(Solution* s, int value){
     Solution *sNew = solution_duplicate(s);
     return new_pnode((void*) sNew, value);
 }
 
-PointerNode *new_2inode(int i, int j, int value){
+PointerNode *new_pnode_arr2i(int i, int j, int value){
     int *arr = malloc(sizeof(int) * 2);
     arr[0] = i;
     arr[1] = j;
@@ -41,7 +41,7 @@ PointerList *new_plist(){
     */
     PointerList *list = malloc(sizeof(PointerList));
     list->head = NULL;
-    list->size_list = 0;
+    list->size = 0;
     return list;
 }
 
@@ -99,7 +99,7 @@ int plist_size(PointerList *list){
         i++;
         aux = aux->next;
     }
-    list->size_list = i;
+    list->size = i;
     return (int) i;
 }
 
@@ -139,7 +139,7 @@ void plist_insert(PointerList *l, void *p, int value, int position){
         node->next = aux->next;
         aux->next = node;
     }
-    l->size_list++;
+    l->size++;
 }
 
 void plist_push_front(PointerList *l, void *p, int value){
@@ -161,7 +161,7 @@ void plist_push_back(PointerList *l, void *p, int value){
      * @param undo_color: cor que desfaz o movimento tabu
      * @param value: número de iterações com o movimento restrito
     */
-    plist_insert(l, p, value, l->size_list);
+    plist_insert(l, p, value, l->size);
 }
 
 void plist_erase(PointerList *l, int position, ptr_handler_t free_content){
@@ -181,7 +181,7 @@ void plist_erase(PointerList *l, int position, ptr_handler_t free_content){
         aux->next = ptr->next;
     }
     free_pnode(ptr, free_content);
-    l->size_list--;
+    l->size--;
 }
 
 void plist_pop_front(PointerList *l, ptr_handler_t free_content){
@@ -197,5 +197,5 @@ void plist_pop_back(PointerList *l, ptr_handler_t free_content){
      * Função para remover o último elemento da lista
      * @param l: lista a ter o último elemento removido
     */
-     plist_erase(l, l->size_list-1, free_content);
+     plist_erase(l, l->size-1, free_content);
 }

@@ -14,7 +14,7 @@ typedef struct node_t{
 
 typedef struct _list_t{
     PointerNode *head;
-    int size_list;
+    int size;
 } PointerList;
 
 /// @brief Creates a new (and empty) node. It's specific for Tabu List
@@ -22,8 +22,8 @@ typedef struct _list_t{
 /// @param value Integer representing number of iterations to restrict solution
 /// @return A pointer to node to be inserted into a list
 PointerNode *new_pnode(void *p, int value);
-PointerNode *new_snode(Solution *s, int value);
-PointerNode *new_2inode(int i, int j, int value);
+PointerNode *new_pnode_sol(Solution *s, int value);
+PointerNode *new_pnode_arr2i(int i, int j, int value);
 void free_pnode(PointerNode *node, ptr_handler_t free_content);
 
 /// @brief Creates a new (and empty) list
