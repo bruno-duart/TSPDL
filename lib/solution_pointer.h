@@ -60,6 +60,7 @@ int isIn(int port, int *route);
 int indexOf(Solution **Arr, int value);
 
 Solution* random_solution();
+Solution* random_solution_guided();
 
 /// @brief Build a new solution to the TSPDL using the greedy method
 /// @return A new solution.
@@ -78,6 +79,7 @@ void copy_solution(Solution *S,  Solution *ports);
 ResultLocalSearch* random_swap(ResultLocalSearch* s);
 void random_swap_pointer (Solution* s0, int* index);
 ResultLocalSearch* random_swap_first(Solution *s0);
+void lsearch_random_swap(Solution* s0, int* index, int max_swaps);
 
 // /// @brief Performs a Local-Search procedure using a fixed_swap technique
 // /// @param s Solution to be refined

@@ -22,34 +22,17 @@ int main()
     scanf("%d", &OPT_VAL);
 
     // Stopping criteria
-    MAX_ITER = 100;
-
-    int best = 0;
-    
-    // metaheuristica
-    // Graph_print(G);    
-    // print_arr(DEMAND);
-    // print_arr(DRAFT);
+    MAX_ITER = 200;
 
     Solution* s = greedy_method();
-    //int* index = (int*) malloc(sizeof(int)*2);
-    //index[0]=0;
-    //index[1]=0;
+
     tempo = clock();
     Solution* ns = tabu_search(s, G, 10);
-    
-    // fixed_swap_pointer(s, index);
-    // print_solution(s);
-    // printf("[%d,%d]\n",index[0],index[1]);
-
     tempo = clock() - tempo;
 
-    printf("%f\n", (double)tempo / CLOCKS_PER_SEC);
-    print_solution(ns);
-    print_solution(s);
+    printf("%d,%d,%d,%f\n", ns->distance, s->distance, OPT_VAL, (double)tempo / CLOCKS_PER_SEC);
     free_solution(s);
     free_solution(ns);
-    //free(index);
     free_Graph(G);
     free(DEMAND);
     free(DRAFT);

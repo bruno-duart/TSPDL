@@ -22,14 +22,14 @@ Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao)
     index[1] = 0;
     
     int index_tabu, iter_no_improv = 0;
-    while (iter_no_improv < 100)
+    while (iter_no_improv < MAX_ITER)
     {
-        if ((iter_no_improv % 20 == 0) && (iter_no_improv > 0)) {
-            aux = random_solution();
+        if ((iter_no_improv % 10 == 0) && (iter_no_improv > 0)) {
+            aux = random_solution_guided();
             copy_solution(curr_s, aux);
             free_solution(aux);
         }
-        //random_swap_pointer(curr_s, index);
+        lsearch_random_swap(curr_s, index, MAX_ITER/2);
         fixed_swap_pointer(curr_s, index);
         index_tabu = is_in_tabu_list(tabu_list, index[0], index[1]);
         if (index_tabu == -1)
@@ -54,7 +54,7 @@ Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao)
             iter_no_improv++;
         }
 
-        copy_solution(stored_s, curr_s);
+        copy_solution(curr_s, stored_s);
     }
     free_solution(curr_s);
     free_solution(stored_s);

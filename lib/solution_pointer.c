@@ -125,6 +125,29 @@ Solution* random_solution(){
     return s;
 }
 
+Solution* random_solution_guided(){ 
+    Solution *s = new_solution(); 
+    int* visited = (int*) calloc(G->V, sizeof(int)); 
+    int count_visited = 0, weight = G->V-1; 
+     
+    s->port[G->V-1] = 0; 
+ 
+    for(int i=0; i<G->V-1; i++){ 
+        s->port[i] = (rand() % (G->V-1)) + 1; 
+        if ((weight > DRAFT[s->port[i]]) || (visited[s->port[i]]) || (weight < DEMAND[s->port[i]])) { 
+            i--; 
+            continue; 
+        } 
+        visited[s->port[i]] = 1; 
+        weight--; 
+        count_visited++; 
+    } 
+ 
+    s->distance = fitness(s->port); 
+    free(visited);
+    return s; 
+}
+
 Solution *greedy_method()
 {
     Solution *newSolution = new_solution();
@@ -310,6 +333,33 @@ void random_swap_pointer (Solution* s0, int* index){
     }
 }
 
+void lsearch_random_swap(Solution* s0, int* index, int max_swaps){
+    Solution* sAux = new_solution();
+    copy_solution(sAux, s0);
+    int aux, i, j;
+    
+    while(max_swaps--){
+        i = randint(0, G->V-1);
+        j = randintavoid(0, G->V-1, i);
+        aux = sAux->port[i]; 
+        sAux->port[i] = sAux->port[j];
+        sAux->port[j] = aux;
+
+        if(is_Solution(sAux->port)){
+            sAux->distance = fitness(sAux->port);
+            if (sAux->distance < s0->distance) {
+                copy_solution(s0, sAux);
+                index[0] = i;
+                index[1] = j;
+            }
+        } else {
+            aux = sAux->port[i]; 
+            sAux->port[i] = sAux->port[j];
+            sAux->port[j] = aux;
+        }
+    }
+    free_solution(sAux);
+}
 
 ResultLocalSearch* random_swap_first(Solution *s0)
 {
@@ -417,8 +467,8 @@ void fixed_swap_pointer(Solution *s0, int* index)
                 for (int k = 0; k < G->V; k++)
                     s0->port[k] = copy[k];
                 s0->distance = distance;
-                index[0] = index_i;
-                index[1] = index_j;
+                index[0] = i;
+                index[1] = j;
             }                
 
             // Undo movement, to allow next iteration
