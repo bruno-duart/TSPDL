@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
-//#include "lib/meta_index_tabu.h"
 #include "lib/local_search.h"
+#include "lib/tabu_search.h"
 
 typedef struct time_diff_t {
 	clock_t ti;
@@ -35,6 +35,9 @@ int main()
     scanf("%d", &DIM);
     ProblemInstance *pinst = pinstance_init(DIM);
     scanf("%d", &OPT_VAL);
+    printf("------------------------\n");
+    printf("Best-known cost: %d\n", OPT_VAL);
+    printf("------------------------\n");
 
     // Stopping criteria
     MAX_ITER = 100;
@@ -72,6 +75,12 @@ int main()
     tick(&tdiff);
     constructor_greedy(sct->s);
 	printf("\n>>> Greedy constructor (%.2fms)\n", 1000*tack(&tdiff));
+    solution_print(sct->s);
+    
+    tick(&tdiff);
+    TabuList *tl = new_tabu_list(10, 2);
+    mhsearch_tabu(sct, tl, 250, 10, 100);
+	printf("\n>>> Tabu search (%.2fms)\n", 1000*tack(&tdiff));
     solution_print(sct->s);
     
     

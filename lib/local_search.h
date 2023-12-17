@@ -15,7 +15,6 @@ void constructor_pseudo_greedy(Solution *s);
 /// @return A new solution.
 
 bool lsearch_try_swap(Solution *s, int i, int j);
-bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index);
 
 
 /// @brief Performs a Local-Search procedure using a random-swap technique

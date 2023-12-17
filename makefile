@@ -23,12 +23,15 @@ ${TARGET}/lists.o: ${SOURCE}/lists.c ${SOURCE}/lists.h ${SOURCE}/solutions.h
 ${TARGET}/local_search.o: ${SOURCE}/local_search.c ${SOURCE}/local_search.h ${SOURCE}/solutions.h
 	gcc -o ${TARGET}/local_search.o ${SOURCE}/local_search.c ${CC_FLAGS}
 
+${TARGET}/tabu_search.o: ${SOURCE}/tabu_search.c ${SOURCE}/tabu_search.h ${SOURCE}/solutions.h ${SOURCE}/lists.h ${SOURCE}/arrays.h
+	gcc -o ${TARGET}/tabu_search.o ${SOURCE}/tabu_search.c ${CC_FLAGS}
+
 ${TARGET}/containers.o: ${TARGET}/arrays.o ${TARGET}/graphs.o ${TARGET}/solutions.o ${TARGET}/lists.o
 	ld -relocatable -o ${TARGET}/containers.o ${TARGET}/arrays.o ${TARGET}/graphs.o ${TARGET}/solutions.o ${TARGET}/lists.o
 
-${TARGET}/solvers.o: ${TARGET}/local_search.o
-	ld -relocatable -o ${TARGET}/solvers.o ${TARGET}/local_search.o
+${TARGET}/solvers.o: ${TARGET}/local_search.o ${TARGET}/tabu_search.o
+	ld -relocatable -o ${TARGET}/solvers.o ${TARGET}/local_search.o ${TARGET}/tabu_search.o
 
-${TARGET}/main.o: main.c ${SOURCE}/local_search.h
+${TARGET}/main.o: main.c ${SOURCE}/local_search.h ${SOURCE}/tabu_search.h
 	gcc -o ${TARGET}/main.o main.c ${CC_FLAGS}
 

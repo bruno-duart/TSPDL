@@ -64,12 +64,7 @@ bool solution_is_valid(Solution *s)
 
 bool solution_compare(Solution* sA, Solution* sB)
 {
-    for (int i = 0; i < sA->dim; i++)
-    {
-        if (sA->route[i] != sB->route[i])
-            return false;
-    }
-    return true;
+    return array_compare(sA->route, sB->route, sA->dim);
 }
 
 bool solution_is_in(Solution* s, int port)
@@ -134,11 +129,26 @@ void free_changetrack(SolutionChangeTrack *sct, bool keep_solution)
 	free(sct);
 }
 
+void changetrack_copy(SolutionChangeTrack *sctSource, SolutionChangeTrack *sctTarget)
+{
+	solution_copy(sctSource->s, sctTarget->s);
+	array_copy(sctSource->change, sctTarget->change, sctSource->n);
+}
+
 SolutionChangeTrack* changetrack_duplicate(SolutionChangeTrack *sctSource)
 {
 	SolutionChangeTrack* sctTarget = new_changetrack(sctSource->s, sctSource->n);
 	sctTarget->s = solution_duplicate(sctSource->s);
-	for(int i=0; i < sctSource->n; i++)
-		sctTarget->change[i] = sctSource->change[i];
+	array_copy(sctSource->change, sctTarget->change, sctSource->n);
 	return sctTarget;
+}
+
+bool changetrack_update(SolutionChangeTrack *sctCurr, SolutionChangeTrack *sctNew)
+{
+        if (sctNew->s->distance < sctCurr->s->distance)
+        {
+            changetrack_copy(sctNew, sctCurr);
+            return true;
+        }
+        return false;
 }

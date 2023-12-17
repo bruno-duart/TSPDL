@@ -1,143 +1,110 @@
 #include "tabu_search.h"
 
-TabuList* new_tabu_list(int capacity)
+TabuList* new_tabu_list(int restriction, int move_size)
 {
     TabuList* tl = malloc(sizeof(TabuList));
     tl->list = new_plist();
-    tl->max_capacity = capacity;
+    tl->restriction = restriction;
+    tl->move_size = move_size;
     return tl;
-}
-
-int tabu_list_is_in(TabuList* tl, int index_i, int index_j){
-    node_t* ptr = tl->list->head;
-    for (int i = 0; i < tl->list->size && ptr != NULL; i++) {
-        if ((ptr->index_i == index_i) && (ptr->index_j == index_j)) {
-            return i;
-        }
-        ptr = ptr->next;
-    }
-    return -1;
 }
 
 void free_tabu_list(TabuList* tl)
 {
-    free_list(tl->list);
+    free_plist(tl->list, free);
     free(tl);
 }
 
-void insert_tabu_list(TabuList* tl, int index_i, int index_j, int iter_restricao) {
-    if (tl->list->size < tl->max_capacity) {
-        list_push_back(tl->list, index_i, index_j, iter_restricao);
+int tabu_list_find_move(TabuList* tl, int* move){
+    PointerNode *node = tl->list->head;
+    for (int i = 0; i < tl->list->size && node != NULL; i++) {
+        if (array_compare((int*) node->p, move, tl->move_size))
+            return i;
+        node = node->next;
     }
-    else {
-        list_pop_front(tl->list);
-        list_push_back(tl->list,index_i, index_j, iter_restricao);
-    }
+    return -1;
 }
 
-void update_tabu_counter(TabuList* tl)
+void tabu_list_insert_move(TabuList* tl, int* move) {
+    while (tl->list->size >= tl->restriction) {
+        plist_pop_front(tl->list, free);
+    }
+    plist_push_back(tl->list, move, tl->restriction);
+}
+
+void tabu_list_count(TabuList* tl)
 {
-    node_t* ptr = tl->list->head;
+    PointerNode *node = tl->list->head;
     int count;
-    for (int i = 0; i < tl->list->size && ptr != NULL; i++)
+    for (int i = 0; i < tl->list->size && node != NULL; i++)
     {
-        count = --(ptr->count_iter);
-        ptr = ptr->next;
+        count = --(node->value);
+        node = node->next;
         if (count == 0)
         {
-            remove_tabu_move(tl, i--);
+            tabu_list_remove_move(tl, i--);
         }
     }
 }
 
-void remove_tabu_move(TabuList* tl, int index)
+void tabu_list_remove_move(TabuList* tl, int index)
 {
-    if (index == 0)
-    {
-        list_pop_front(tl->list);
-    }
-    else if (index == tl->list->size)
-    {
-        list_pop_back(tl->list);
-    }
-    else
-    {
-        list_erase(tl->list, index);
-    }
+	plist_erase(tl->list, index, free);
 }
 
-void print_tabu_list(TabuList* tl)
+void tabu_list_print(TabuList* tl)
 {
     printf("Size TL: %d\n", tl->list->size);
-    printf("Capacity TL: %d\n", tl->max_capacity);
-    node_t* ptr = tl->list->head;
-    while (ptr != NULL)
+    printf("Capacity TL: %d\n", tl->restriction);
+    PointerNode *node = tl->list->head;
+    while (node != NULL)
     {
-        printf("Counter: %d\t(%d,%d)", ptr->count_iter, ptr->index_i, ptr->index_j);
-        printf("------\n");
-        ptr = ptr->next;
+        printf("Counter: %d\t >>> ", node->value);
+        array_print((int*) node->p, tl->move_size);
+        node = node->next;
     }
 }
 
-Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_list, int alpha)
+void mhsearch_tabu(SolutionChangeTrack* sctBest, TabuList *tl, int persist, int randomize_at, int max_swaps)
 {
-    TabuList* tl = new_tabu_list(size_tabu_list);
-    Solution* curr_s = new_solution(), *aux;
-    Solution* best_s = new_solution();
-    copy_solution(curr_s, s0->port);
-    copy_solution(best_s, s0->port);
-    ResultLocalSearch* new_res;
+    SolutionChangeTrack* sctNext = changetrack_duplicate(sctBest);
+    SolutionChangeTrack* sctCurr = changetrack_duplicate(sctBest);
+    int index, count_iter = 0;
+    int *move;
     
-    //ResultLocalSearch* new_res2;
-    
-    ResultLocalSearch* new_res3;
-    int index_tabu, iter_no_improv = 0;
-    while (iter_no_improv < 100)
+    while (count_iter < persist)
     {
-        if (iter_no_improv % 10 == 0) {
-            aux = random_solution();
-            copy_solution(curr_s, aux->port);
-            free_solution(aux);
+        if (count_iter % randomize_at == 0) {
+        	constructor_random_guided(sctCurr->s);
         }
-        new_res = random_swap_first(curr_s); // recebe resultado da busca local - definir
-        new_res3 = fixed_swap(new_res);
-        //new_res3 = swap_2opt(curr_s);
-        //print_tabu_list(tl);
-        //print_resultlocalsearch(new_res);
-        // local_search
-        index_tabu = is_in_tabu_list(tl, new_res3->index_i, new_res3->index_j);
-        if (index_tabu == -1)
+        lsearch_random_swap(sctCurr, max_swaps);
+        lsearch_fixed_swap(sctCurr);
+        index = tabu_list_find_move(tl, sctCurr->change);
+        if (index == -1)
         {
             // aceita, e insere na lista
             // se precisar, remove o item mais antigo da lista
-            copy_solution(curr_s, new_res3->s->port);
-            insert_tabu_list(tl, new_res3->index_i, new_res3->index_j, iter_restricao);
+            changetrack_copy(sctCurr, sctNext);
+            move = array_duplicate(sctNext->change, sctNext->n);
+            tabu_list_insert_move(tl, move);
         }
-        else if (new_res3->s->distance < (best_s->distance))
+        else if (changetrack_update(sctNext, sctCurr))
         {
-            // verifica se é melhor que a melhor encontrada com diferença em x%
-            // se sim, aceita a solução
-            copy_solution(curr_s, new_res3->s->port);
-            remove_tabu_move(tl, index_tabu);
+            tabu_list_remove_move(tl, index);
         }
         //print_tabu_list(tl);
-        update_tabu_counter(tl);
+        tabu_list_count(tl);
 
-        if (curr_s->distance < best_s->distance)
+        if (changetrack_update(sctBest, sctNext))
         {
-            copy_solution(best_s, curr_s->port);
-            iter_no_improv = 0;
+            count_iter = 0;
         }
         else
         {
-            iter_no_improv++;
+            count_iter++;
         }
-
-        free_resultlocalsearch(new_res);
-        //free_resultlocalsearch(new_res2);
-        free_resultlocalsearch(new_res3);
+    	changetrack_copy(sctNext, sctCurr);
     }
-    free_solution(curr_s);
-    free_tabu_list(tl);
-    return best_s;
+    free_changetrack(sctCurr, false);
+    free_changetrack(sctNext, false);
 }

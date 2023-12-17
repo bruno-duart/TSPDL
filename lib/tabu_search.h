@@ -4,17 +4,19 @@
 #include "arrays.h"
 #include "solutions.h"
 #include "lists.h"
+#include "local_search.h"
 
 typedef struct tabulist_t
 {
-    int max_capacity;
+	int restriction;
+    int move_size;
     PointerList* list;
 } TabuList;
 
 /// @brief 
 /// @param capacity 
 /// @return 
-TabuList* new_tabu_list(int capacity);
+TabuList* new_tabu_list(int restriction, int move_size);
 
 /// @brief 
 /// @param tl 
@@ -25,7 +27,7 @@ void free_tabu_list(TabuList* tl);
 /// @param index_i 
 /// @param index_j 
 /// @return 
-int tabu_list_is_in(TabuList* tl, int index_i, int index_j);
+int tabu_list_find_move(TabuList* tl, int* move);
 
 /// @brief 
 /// @param tabu_list 
@@ -35,8 +37,8 @@ void tabu_list_count(TabuList* tl);
 /// @param tabu_list 
 /// @param index_i
 /// @param index_j
-/// @param iter_restricao 
-void tabu_list_insert_move(TabuList* tl, int index_i, int index_j, int iter_restricao);
+/// @param restriction 
+void tabu_list_insert_move(TabuList* tl, int* move);
 
 /// @brief 
 /// @param tabu_list 
@@ -50,10 +52,10 @@ void tabu_list_print(TabuList* tl);
 /// @brief 
 /// @param s0 
 /// @param G 
-/// @param iter_restricao 
+/// @param restriction 
 /// @param size_tabu_list 
 /// @param alpha 
 /// @return 
-Solution* tabu_search(Solution* s0, Graph* G, int iter_restricao, int size_tabu_list, int alpha);
+void mhsearch_tabu(SolutionChangeTrack* sctBest, TabuList *tl, int persist, int randomize_at, int max_swaps);
 
 #endif

@@ -91,6 +91,8 @@ void solution_print(Solution* s);
 
 SolutionChangeTrack* new_changetrack(Solution *s, int n_changes);
 void free_changetrack(SolutionChangeTrack *sct, bool keep_solution);
+void changetrack_copy(SolutionChangeTrack *sctSource, SolutionChangeTrack *sctTarget);
 SolutionChangeTrack* changetrack_duplicate(SolutionChangeTrack *sctSource);
+bool changetrack_update(SolutionChangeTrack *sctCurr, SolutionChangeTrack *sctNew);
 
 #endif

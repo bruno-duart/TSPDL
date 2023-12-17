@@ -144,48 +144,37 @@ bool lsearch_try_port_swap(Solution *s, int i, int j)
 	}
 }
 
-bool lsearch_choose_better(SolutionChangeTrack *sctCurr, Solution *sCandidate, int *index)
-{
-        if (sCandidate->distance < sctCurr->s->distance)
-        {
-            solution_copy(sCandidate, sctCurr->s);
-            array_copy(index, sctCurr->change, sctCurr->s->dim);
-            return true;
-        }
-        return false;
-}
-
 void lsearch_random_swap(SolutionChangeTrack *sctCurr, int max_swaps)
 {
-	Solution *sAux = solution_duplicate(sctCurr->s);
-    int index[2], valid_ports = sctCurr->s->dim - 1;
+	SolutionChangeTrack *sctAux = changetrack_duplicate(sctCurr);
+    int valid_ports = sctCurr->s->dim - 1;
 
     while(max_swaps--)
     {
-        index[0] = randint(0, valid_ports);
-        index[1] = randintavoid(0, valid_ports, index[0]);
-        if(lsearch_try_port_swap(sAux, index[0], index[1]))
-			lsearch_choose_better(sctCurr, sAux, index);
+        sctAux->change[0] = randint(0, valid_ports);
+        sctAux->change[1] = randintavoid(0, valid_ports, sctAux->change[0]);
+        if(lsearch_try_port_swap(sctAux->s, sctAux->change[0], sctAux->change[1]))
+			changetrack_update(sctCurr, sctAux);
     }
-    free_solution(sAux);
+    free_changetrack(sctAux, false);
 }
 
 void lsearch_fixed_swap(SolutionChangeTrack *sctCurr)
 {
-	Solution *sAux = solution_duplicate(sctCurr->s);
-    int index[2], dim = sctCurr->s->dim;
+	SolutionChangeTrack *sctAux = changetrack_duplicate(sctCurr);
+    int dim = sctCurr->s->dim;
 
     for (int i = 0; i < dim - 1; i++)
     {
 		for (int j = i+1; j < dim; j++)
 		{
-			if(lsearch_try_port_swap(sAux, i, j))
+			if(lsearch_try_port_swap(sctAux->s, i, j))
 			{
-				index[0] = i;
-				index[1] = j;
-				lsearch_choose_better(sctCurr, sAux, index);
+				sctAux->change[0] = i;
+				sctAux->change[1] = j;
+				changetrack_update(sctCurr, sctAux);
 			}
 		}
 	}
-    free_solution(sAux);
+    free_changetrack(sctAux, false);
 }

@@ -6,13 +6,13 @@
 
 typedef void (*ptr_handler_t)(void*);
 
-typedef struct node_t{
-    struct node_t *next;
+typedef struct pnode_t{
+    struct pnode_t *next;
     int value;
-    void* p;
+    void *p;
 } PointerNode;
 
-typedef struct _list_t{
+typedef struct plist_t{
     PointerNode *head;
     int size;
 } PointerList;
